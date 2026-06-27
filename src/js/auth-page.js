@@ -28,6 +28,7 @@ function friendlyAuthError(error) {
   if (messageText.includes('email not confirmed')) return 'Confirme seu e-mail antes de entrar.';
   if (messageText.includes('user already registered')) return 'Já existe uma conta com este e-mail.';
   if (messageText.includes('rate limit')) return 'Muitas tentativas em pouco tempo. Aguarde alguns minutos.';
+  if (messageText.includes('same password')) return 'A nova senha deve ser diferente da senha atual.';
   return error?.message || 'Não foi possível concluir. Revise os dados e tente novamente.';
 }
 
@@ -74,6 +75,35 @@ async function handleSignup(data) {
   showMessage('Conta criada. Confirme o endereço enviado ao seu e-mail antes de entrar.', 'success');
 }
 
+async function handleRecovery(data) {
+  const supabase = getSupabaseClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(
+    String(data.get('email')).trim(),
+    { redirectTo: `${window.location.origin}/redefinir-senha.html` }
+  );
+  if (error) throw error;
+  form.reset();
+  showMessage('Se o e-mail estiver cadastrado, enviaremos as instruções para redefinir a senha.', 'success');
+}
+
+async function handlePasswordReset(data) {
+  const password = String(data.get('password'));
+  const passwordConfirmation = String(data.get('password_confirmation'));
+
+  if (password.length < 8) throw new Error('A senha deve ter pelo menos 8 caracteres.');
+  if (password !== passwordConfirmation) throw new Error('As senhas não coincidem.');
+
+  const supabase = getSupabaseClient();
+  const { data: sessionData } = await supabase.auth.getSession();
+  if (!sessionData.session) throw new Error('O link de redefinição expirou ou não é válido. Solicite um novo link.');
+
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) throw error;
+  form.reset();
+  showMessage('Senha atualizada com sucesso. Redirecionando para sua área…', 'success');
+  window.location.replace('/app/');
+}
+
 async function initializeAuthPage() {
   try {
     const supabase = getSupabaseClient();
@@ -95,6 +125,12 @@ async function initializeAuthPage() {
 
     if (data.session && form?.dataset.authForm === 'login') {
       window.location.replace('/app/');
+    }
+
+    if (!data.session && form?.dataset.authForm === 'reset') {
+      showMessage('O link de redefinição expirou ou não é válido. Solicite um novo link.', 'error');
+      const button = form.querySelector('button[type="submit"]');
+      if (button) button.disabled = true;
     }
   } catch (error) {
     if (callbackStatus) {
@@ -119,6 +155,8 @@ form?.addEventListener('submit', async (event) => {
     const action = form.dataset.authForm;
     if (action === 'login') await handleLogin(data);
     if (action === 'signup') await handleSignup(data);
+    if (action === 'recover') await handleRecovery(data);
+    if (action === 'reset') await handlePasswordReset(data);
   } catch (error) {
     showMessage(friendlyAuthError(error), 'error');
   } finally {
