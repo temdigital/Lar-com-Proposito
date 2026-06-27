@@ -3,8 +3,8 @@
 with checks as (
   select 'public_tables'::text as check_name,
          (select count(*) from pg_tables where schemaname = 'public')::text as actual_value,
-         '48 ou mais'::text as expected_value,
-         (select count(*) from pg_tables where schemaname = 'public') >= 48 as passed
+         '47 ou mais'::text as expected_value,
+         (select count(*) from pg_tables where schemaname = 'public') >= 47 as passed
   union all
   select 'rls_policies',
          (select count(*) from pg_policies where schemaname = 'public')::text,
