@@ -2,6 +2,8 @@ import { getSupabaseClient } from './supabase.js';
 
 const form = document.querySelector('[data-auth-form]');
 const message = document.querySelector('[data-form-message]');
+const callbackStatus = document.querySelector('[data-callback-status]');
+const callbackLogin = document.querySelector('[data-callback-login]');
 
 function showMessage(text, type = 'info') {
   if (!message) return;
@@ -72,14 +74,37 @@ async function handleSignup(data) {
   showMessage('Conta criada. Confirme o endereço enviado ao seu e-mail antes de entrar.', 'success');
 }
 
-async function redirectAuthenticatedUser() {
+async function initializeAuthPage() {
   try {
     const supabase = getSupabaseClient();
-    const { data } = await supabase.auth.getSession();
+    const { data, error } = await supabase.auth.getSession();
+    if (error) throw error;
+
+    if (callbackStatus) {
+      if (!data.session) {
+        callbackStatus.textContent = 'O link expirou ou já foi utilizado. Solicite um novo acesso.';
+        if (callbackLogin) callbackLogin.hidden = false;
+        return;
+      }
+
+      await supabase.rpc('register_last_access');
+      callbackStatus.textContent = 'E-mail confirmado. Redirecionando para sua área…';
+      window.location.replace('/app/');
+      return;
+    }
+
     if (data.session && form?.dataset.authForm === 'login') {
       window.location.replace('/app/');
     }
   } catch (error) {
+    if (callbackStatus) {
+      callbackStatus.textContent = error?.message === 'SUPABASE_NOT_CONFIGURED'
+        ? 'A integração do Supabase ainda não foi configurada no site.'
+        : 'Não foi possível validar o link. Volte ao login e tente novamente.';
+      if (callbackLogin) callbackLogin.hidden = false;
+      return;
+    }
+
     if (error?.message !== 'SUPABASE_NOT_CONFIGURED') console.error(error);
   }
 }
@@ -101,4 +126,4 @@ form?.addEventListener('submit', async (event) => {
   }
 });
 
-redirectAuthenticatedUser();
+initializeAuthPage();
