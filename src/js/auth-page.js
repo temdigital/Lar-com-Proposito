@@ -16,6 +16,19 @@ function setSubmitting(isSubmitting) {
   button.textContent = isSubmitting ? 'Aguarde…' : button.dataset.defaultLabel;
 }
 
+function friendlyAuthError(error) {
+  if (error?.message === 'SUPABASE_NOT_CONFIGURED') {
+    return 'A integração do Supabase ainda aguarda a chave pública do projeto. Nenhum dado foi enviado.';
+  }
+
+  const messageText = String(error?.message || '').toLowerCase();
+  if (messageText.includes('invalid login credentials')) return 'E-mail ou senha incorretos.';
+  if (messageText.includes('email not confirmed')) return 'Confirme seu e-mail antes de entrar.';
+  if (messageText.includes('user already registered')) return 'Já existe uma conta com este e-mail.';
+  if (messageText.includes('rate limit')) return 'Muitas tentativas em pouco tempo. Aguarde alguns minutos.';
+  return error?.message || 'Não foi possível concluir. Revise os dados e tente novamente.';
+}
+
 async function handleLogin(data) {
   const supabase = getSupabaseClient();
   const { error } = await supabase.auth.signInWithPassword({
@@ -23,7 +36,8 @@ async function handleLogin(data) {
     password: String(data.get('password'))
   });
   if (error) throw error;
-  window.location.href = '/app/';
+  await supabase.rpc('register_last_access');
+  window.location.replace('/app/');
 }
 
 async function handleSignup(data) {
@@ -35,11 +49,11 @@ async function handleSignup(data) {
   if (!data.get('terms')) throw new Error('É necessário aceitar os Termos de Uso e a Política de Privacidade.');
 
   const supabase = getSupabaseClient();
-  const { error } = await supabase.auth.signUp({
+  const { data: signupData, error } = await supabase.auth.signUp({
     email: String(data.get('email')).trim(),
     password,
     options: {
-      emailRedirectTo: `${window.location.origin}/login.html`,
+      emailRedirectTo: `${window.location.origin}/auth/callback.html`,
       data: {
         nome: String(data.get('name')).trim(),
         whatsapp: String(data.get('whatsapp')).trim()
@@ -47,8 +61,27 @@ async function handleSignup(data) {
     }
   });
   if (error) throw error;
+
   form.reset();
+  if (signupData.session) {
+    showMessage('Conta criada e sessão iniciada. Redirecionando…', 'success');
+    window.location.replace('/app/');
+    return;
+  }
+
   showMessage('Conta criada. Confirme o endereço enviado ao seu e-mail antes de entrar.', 'success');
+}
+
+async function redirectAuthenticatedUser() {
+  try {
+    const supabase = getSupabaseClient();
+    const { data } = await supabase.auth.getSession();
+    if (data.session && form?.dataset.authForm === 'login') {
+      window.location.replace('/app/');
+    }
+  } catch (error) {
+    if (error?.message !== 'SUPABASE_NOT_CONFIGURED') console.error(error);
+  }
 }
 
 form?.addEventListener('submit', async (event) => {
@@ -62,11 +95,10 @@ form?.addEventListener('submit', async (event) => {
     if (action === 'login') await handleLogin(data);
     if (action === 'signup') await handleSignup(data);
   } catch (error) {
-    const text = error?.message === 'SUPABASE_NOT_CONFIGURED'
-      ? 'A integração do Supabase ainda aguarda a chave pública do projeto. Nenhum dado foi enviado.'
-      : error?.message || 'Não foi possível concluir. Revise os dados e tente novamente.';
-    showMessage(text, 'error');
+    showMessage(friendlyAuthError(error), 'error');
   } finally {
     setSubmitting(false);
   }
 });
+
+redirectAuthenticatedUser();
