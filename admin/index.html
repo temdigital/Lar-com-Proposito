@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#431520">
+  <title>Painel administrativo | Lar com Propósito</title>
+  <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/src/styles/tokens.css">
+  <link rel="stylesheet" href="/src/styles/global.css">
+  <link rel="stylesheet" href="/src/styles/admin.css">
+  <script type="module" src="/src/js/admin.js"></script>
+</head>
+<body class="admin-page">
+  <a class="skip-link" href="#admin-content">Ir para o conteúdo</a>
+
+  <div class="admin-shell">
+    <header class="admin-topbar">
+      <a class="admin-brand" href="/admin/">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M13 39C13 23 22 13 32 10c10 3 19 13 19 29"/><path d="M19 39c4-7 8-10 13-10s9 3 13 10"/><circle cx="32" cy="43" r="4"/></svg></span>
+        <span><strong>Lar com Propósito</strong><small>Painel administrativo</small></span>
+      </a>
+      <div class="admin-topbar-actions">
+        <a class="admin-compact-link" href="/app/">Área da membro</a>
+        <button class="admin-icon-button" type="button" aria-label="Sair" data-admin-logout>↗</button>
+      </div>
+    </header>
+
+    <aside class="admin-sidebar">
+      <nav class="admin-nav" aria-label="Navegação administrativa">
+        <button class="admin-nav-button is-active" type="button" data-admin-nav="visao-geral"><span>⌂</span>Visão geral</button>
+        <button class="admin-nav-button" type="button" data-admin-nav="cursos"><span>▤</span>Cursos</button>
+        <button class="admin-nav-button" type="button" data-admin-nav="pessoas"><span>○</span>Pessoas</button>
+        <button class="admin-nav-button" type="button" data-admin-nav="comunidade"><span>◌</span>Comunidade</button>
+        <button class="admin-nav-button" type="button" data-admin-nav="conteudo"><span>◇</span>Conteúdo</button>
+        <button class="admin-nav-button" type="button" data-admin-nav="eventos"><span>□</span>Eventos</button>
+        <button class="admin-nav-button" type="button" data-admin-nav="atendimento"><span>?</span>Atendimento</button>
+      </nav>
+      <div class="admin-sidebar-footer">
+        <a class="button button-secondary" href="/">Página pública</a>
+      </div>
+    </aside>
+
+    <main class="admin-main" id="admin-content">
+      <section class="admin-loading" data-admin-loading>
+        <div><div class="admin-spinner"></div><h1>Carregando painel…</h1><p>Validando suas permissões e os dados da organização.</p></div>
+      </section>
+
+      <section class="admin-denied" data-admin-denied hidden>
+        <p class="admin-eyebrow">Acesso restrito</p>
+        <h1>Você não possui permissão administrativa.</h1>
+        <p>Seu cadastro está ativo como membro. Caso você faça parte da equipe, uma administradora precisa atribuir o papel adequado.</p>
+        <a class="button" href="/app/">Voltar para minha área</a>
+      </section>
+
+      <section class="admin-error" data-admin-error hidden>
+        <h1>Não foi possível carregar o painel.</h1>
+        <p data-admin-error-message>Tente novamente.</p>
+        <button class="button" type="button" data-admin-retry>Carregar novamente</button>
+      </section>
+
+      <div data-admin-content hidden>
+        <section class="admin-section" data-admin-section="visao-geral">
+          <header class="admin-page-header">
+            <div><p class="admin-eyebrow">Gestão da plataforma</p><h1>Visão geral</h1><p>Indicadores e acessos liberados para seu papel.</p></div>
+            <div class="admin-user-card"><span class="admin-avatar" data-admin-initials>LP</span><div><strong data-admin-name>Carregando…</strong><small data-admin-roles></small></div></div>
+          </header>
+
+          <div class="admin-metrics">
+            <article><span>Usuárias</span><strong data-admin-count="members">—</strong><small>Vínculos na organização</small></article>
+            <article><span>Cursos</span><strong data-admin-count="courses">—</strong><small>Todos os estados</small></article>
+            <article><span>Matrículas</span><strong data-admin-count="enrollments">—</strong><small>Registros de formação</small></article>
+            <article><span>Conteúdos</span><strong data-admin-count="content">—</strong><small>Publicações cadastradas</small></article>
+            <article><span>Eventos</span><strong data-admin-count="events">—</strong><small>Experiências cadastradas</small></article>
+            <article><span>Atendimentos</span><strong data-admin-count="support">—</strong><small>Chamados e contatos</small></article>
+          </div>
+
+          <div class="admin-dashboard-grid">
+            <section class="admin-panel">
+              <div class="admin-panel-header"><div><h2>Módulos disponíveis</h2><p>O acesso é definido pelas permissões do banco.</p></div></div>
+              <div class="admin-module-grid" data-admin-modules></div>
+            </section>
+
+            <section class="admin-panel">
+              <div class="admin-panel-header"><div><h2>Permissões ativas</h2><p>Resumo técnico do seu acesso.</p></div></div>
+              <div class="permission-list" data-admin-permissions></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="admin-section" data-admin-section="cursos" hidden></section>
+        <section class="admin-section" data-admin-section="pessoas" hidden></section>
+        <section class="admin-section" data-admin-section="comunidade" hidden></section>
+        <section class="admin-section" data-admin-section="conteudo" hidden></section>
+        <section class="admin-section" data-admin-section="eventos" hidden></section>
+        <section class="admin-section" data-admin-section="atendimento" hidden></section>
+      </div>
+    </main>
+  </div>
+
+  <nav class="admin-mobile-nav" aria-label="Navegação administrativa móvel">
+    <button class="admin-nav-button is-active" type="button" data-admin-nav="visao-geral"><span>⌂</span><small>Início</small></button>
+    <button class="admin-nav-button" type="button" data-admin-nav="cursos"><span>▤</span><small>Cursos</small></button>
+    <button class="admin-nav-button" type="button" data-admin-nav="pessoas"><span>○</span><small>Pessoas</small></button>
+    <button class="admin-nav-button" type="button" data-admin-nav="conteudo"><span>◇</span><small>Conteúdo</small></button>
+    <button class="admin-nav-button" type="button" data-admin-nav="atendimento"><span>?</span><small>Suporte</small></button>
+  </nav>
+</body>
+</html>
