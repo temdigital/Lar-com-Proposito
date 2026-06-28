@@ -21,7 +21,9 @@ Endereço oficial nesta fase:
 - navegação pública padronizada com prioridade mobile;
 - logotipo tipográfico cursivo com conceito visual Altar Doméstico;
 - cadastro, confirmação de e-mail, login e recuperação de senha;
-- área inicial protegida da membro;
+- dashboard mobile-first da membro com cursos, comunidade, conteúdos, eventos, assinatura e perfil;
+- painel administrativo protegido por papéis e permissões;
+- indicadores administrativos condicionados ao acesso autorizado;
 - páginas Sobre, Fale conosco, Termos, Privacidade e Cookies;
 - formulário público de contato protegido por RLS;
 - robots.txt, sitemap.xml, security.txt e página 404;
@@ -35,6 +37,10 @@ Migrations posteriores:
 
 1. `014_contact_messages.sql`
 2. `015_verify_contact.sql`
+3. `016_member_dashboard.sql`
+4. `017_verify_member_dashboard.sql`
+
+A promoção da primeira administradora é feita manualmente por `supabase/manual/promote_first_admin.sql`, depois da criação e confirmação da conta.
 
 Consulte `docs/instalacao-supabase.md` antes de executar novos arquivos.
 
