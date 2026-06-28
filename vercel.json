@@ -33,7 +33,9 @@
   ],
   "redirects": [
     { "source": "/contato", "destination": "/fale-conosco", "permanent": true },
-    { "source": "/contato.html", "destination": "/fale-conosco", "permanent": true }
+    { "source": "/contato.html", "destination": "/fale-conosco", "permanent": true },
+    { "source": "/seguranca", "destination": "/", "permanent": true },
+    { "source": "/seguranca.html", "destination": "/", "permanent": true }
   ],
   "rewrites": [
     { "source": "/inicio", "destination": "/index.html" }
