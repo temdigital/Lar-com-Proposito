@@ -26,6 +26,8 @@ Depois da fundação, execute novos arquivos em ordem numérica:
 4. `supabase/migrations/017_verify_member_dashboard.sql`
 5. `supabase/migrations/018_lock_member_context.sql`
 6. `supabase/migrations/019_verify_member_context_lock.sql`
+7. `supabase/migrations/020_people_access.sql`
+8. `supabase/migrations/021_verify_people_access.sql`
 
 O arquivo `014_contact_messages.sql` cria o canal público de contato com inserção anônima controlada e leitura restrita à equipe com a permissão `support.manage`.
 
@@ -50,16 +52,35 @@ O arquivo `019_verify_member_context_lock.sql` deve retornar:
 - `anonymous_can_execute = false`;
 - `anonymous_cannot_execute = true`.
 
+O arquivo `020_people_access.sql` cria as operações protegidas do módulo Pessoas e acessos:
+
+- atualização de membro, vínculo e papéis;
+- proteção contra autossuspensão e remoção da última administradora;
+- criação e revogação de convites;
+- token armazenado somente como hash;
+- visualização segura do convite;
+- aceite autenticado com conferência do e-mail;
+- registro das operações em `audit_logs`.
+
+O arquivo `021_verify_people_access.sql` é somente leitura e deve retornar todos os campos como `true`, inclusive:
+
+- `update_member_function`;
+- `create_invitation_function`;
+- `revoke_invitation_function`;
+- `invitation_preview_function`;
+- `accept_invitation_function`;
+- `authenticated_can_update_member`;
+- `authenticated_can_create_invitation`;
+- `anonymous_cannot_update_member`;
+- `anonymous_cannot_create_invitation`;
+- `anonymous_can_preview_invitation`;
+- `authenticated_can_accept_invitation`.
+
 ## Primeira administradora
 
-A promoção da primeira administradora não é uma migration automática. Depois de criar a conta e confirmar o e-mail:
+A primeira administradora foi promovida com sucesso para a conta `cafedeeducadoras@gmail.com`, com os papéis `admin` e `membro`.
 
-1. abra `supabase/manual/promote_first_admin.sql`;
-2. substitua todas as ocorrências de `ADMIN_EMAIL_AQUI` pelo e-mail exato da conta;
-3. execute o arquivo inteiro no SQL Editor;
-4. confira se o resultado mostra exatamente os papéis `admin` e `membro`.
-
-O script é idempotente, mantém o vínculo organizacional ativo, atribui os dois papéis e registra a promoção em `audit_logs`. A execução é interrompida se a conta não existir ou ainda não estiver confirmada.
+O procedimento auditável permanece disponível em `supabase/manual/promote_first_admin.sql` para recuperação controlada ou instalação em outro ambiente. O script é idempotente, mantém o vínculo organizacional ativo, atribui os dois papéis e registra a promoção em `audit_logs`.
 
 ## Interrupção obrigatória em caso de erro
 
@@ -83,4 +104,6 @@ Depois das migrations:
 5. testar o formulário público de contato;
 6. testar a área da membro em smartphone e desktop;
 7. validar que pessoas sem permissão não entram em `/admin/`;
-8. revisar periodicamente logs, RLS e dependências.
+8. criar um convite de teste e concluir o fluxo em `/aceite-convite`;
+9. testar suspensão, reativação e troca de papéis com uma conta secundária;
+10. revisar periodicamente logs, RLS e dependências.
