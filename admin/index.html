@@ -27,15 +27,15 @@
       </div>
     </header>
 
-    <aside class="admin-sidebar">
+    <aside class="admin-sidebar" data-admin-navigation hidden>
       <nav class="admin-nav" aria-label="Navegação administrativa">
         <button class="admin-nav-button is-active" type="button" data-admin-nav="visao-geral"><span>⌂</span>Visão geral</button>
-        <button class="admin-nav-button" type="button" data-admin-nav="cursos"><span>▤</span>Cursos</button>
-        <button class="admin-nav-button" type="button" data-admin-nav="pessoas"><span>○</span>Pessoas</button>
-        <button class="admin-nav-button" type="button" data-admin-nav="comunidade"><span>◌</span>Comunidade</button>
-        <button class="admin-nav-button" type="button" data-admin-nav="conteudo"><span>◇</span>Conteúdo</button>
-        <button class="admin-nav-button" type="button" data-admin-nav="eventos"><span>□</span>Eventos</button>
-        <button class="admin-nav-button" type="button" data-admin-nav="atendimento"><span>?</span>Atendimento</button>
+        <button class="admin-nav-button" type="button" data-admin-nav="cursos" data-admin-module="cursos"><span>▤</span>Cursos</button>
+        <button class="admin-nav-button" type="button" data-admin-nav="pessoas" data-admin-module="pessoas"><span>○</span>Pessoas</button>
+        <button class="admin-nav-button" type="button" data-admin-nav="comunidade" data-admin-module="comunidade"><span>◌</span>Comunidade</button>
+        <button class="admin-nav-button" type="button" data-admin-nav="conteudo" data-admin-module="conteudo"><span>◇</span>Conteúdo</button>
+        <button class="admin-nav-button" type="button" data-admin-nav="eventos" data-admin-module="eventos"><span>□</span>Eventos</button>
+        <button class="admin-nav-button" type="button" data-admin-nav="atendimento" data-admin-module="atendimento"><span>?</span>Atendimento</button>
       </nav>
       <div class="admin-sidebar-footer">
         <a class="button button-secondary" href="/">Página pública</a>
@@ -99,12 +99,12 @@
     </main>
   </div>
 
-  <nav class="admin-mobile-nav" aria-label="Navegação administrativa móvel">
+  <nav class="admin-mobile-nav" aria-label="Navegação administrativa móvel" data-admin-navigation hidden>
     <button class="admin-nav-button is-active" type="button" data-admin-nav="visao-geral"><span>⌂</span><small>Início</small></button>
-    <button class="admin-nav-button" type="button" data-admin-nav="cursos"><span>▤</span><small>Cursos</small></button>
-    <button class="admin-nav-button" type="button" data-admin-nav="pessoas"><span>○</span><small>Pessoas</small></button>
-    <button class="admin-nav-button" type="button" data-admin-nav="conteudo"><span>◇</span><small>Conteúdo</small></button>
-    <button class="admin-nav-button" type="button" data-admin-nav="atendimento"><span>?</span><small>Suporte</small></button>
+    <button class="admin-nav-button" type="button" data-admin-nav="cursos" data-admin-module="cursos"><span>▤</span><small>Cursos</small></button>
+    <button class="admin-nav-button" type="button" data-admin-nav="pessoas" data-admin-module="pessoas"><span>○</span><small>Pessoas</small></button>
+    <button class="admin-nav-button" type="button" data-admin-nav="conteudo" data-admin-module="conteudo"><span>◇</span><small>Conteúdo</small></button>
+    <button class="admin-nav-button" type="button" data-admin-nav="atendimento" data-admin-module="atendimento"><span>?</span><small>Suporte</small></button>
   </nav>
 </body>
 </html>
