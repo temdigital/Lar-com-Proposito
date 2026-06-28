@@ -22,6 +22,8 @@ Depois da fundação, execute novos arquivos em ordem numérica:
 
 1. `supabase/migrations/014_contact_messages.sql`
 2. `supabase/migrations/015_verify_contact.sql`
+3. `supabase/migrations/016_member_dashboard.sql`
+4. `supabase/migrations/017_verify_member_dashboard.sql`
 
 O arquivo `014_contact_messages.sql` cria o canal público de contato com inserção anônima controlada e leitura restrita à equipe com a permissão `support.manage`.
 
@@ -32,6 +34,25 @@ O arquivo `015_verify_contact.sql` é somente leitura e deve confirmar:
 - `anon_can_insert = true`;
 - `authenticated_can_select = true`;
 - `authenticated_can_update = true`.
+
+O arquivo `016_member_dashboard.sql` cria a função segura `get_my_app_context()`. Ela fornece somente os dados da pessoa autenticada, seu vínculo, papéis, permissões e contadores necessários para a área da membro e o painel administrativo.
+
+O arquivo `017_verify_member_dashboard.sql` é somente leitura e deve confirmar:
+
+- `context_function_exists = true`;
+- `authenticated_can_execute = true`;
+- `anonymous_cannot_execute = true`.
+
+## Primeira administradora
+
+A promoção da primeira administradora não é uma migration automática. Depois de criar a conta e confirmar o e-mail:
+
+1. abra `supabase/manual/promote_first_admin.sql`;
+2. substitua `ADMIN_EMAIL_AQUI` pelo e-mail exato da conta;
+3. execute o arquivo inteiro no SQL Editor;
+4. confira se o resultado mostra os papéis `admin` e `membro`.
+
+O script é idempotente, registra a promoção em `audit_logs` e interrompe a execução se a conta não existir ou ainda não estiver confirmada.
 
 ## Interrupção obrigatória em caso de erro
 
@@ -53,4 +74,6 @@ Depois das migrations:
 3. nunca expor `service_role`, segredo JWT ou senha do banco;
 4. testar cadastro, confirmação de e-mail, login, logout e recuperação;
 5. testar o formulário público de contato;
-6. revisar periodicamente logs, RLS e dependências.
+6. testar a área da membro em smartphone e desktop;
+7. validar que pessoas sem permissão não entram em `/admin/`;
+8. revisar periodicamente logs, RLS e dependências.
