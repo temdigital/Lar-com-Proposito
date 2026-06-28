@@ -27,8 +27,10 @@ jobs:
       - name: Verify required outputs
         run: |
           test -f dist/index.html
+          test -f dist/sobre.html
           test -f dist/fale-conosco.html
-          test -f dist/seguranca.html
           test -f dist/privacidade.html
           test -f dist/.well-known/security.txt
           test -f dist/sitemap.xml
+          test -f dist/src/styles/public-navigation.css
+          ! test -f dist/seguranca.html
