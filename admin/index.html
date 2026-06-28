@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="/src/styles/admin-courses.css">
   <link rel="stylesheet" href="/src/styles/admin-course-metrics.css">
   <link rel="stylesheet" href="/src/styles/admin-people.css">
+  <link rel="stylesheet" href="/src/styles/admin-community.css">
   <script type="module" src="/src/js/admin.js"></script>
 </head>
 <body class="admin-page">
@@ -40,36 +41,21 @@
         <button class="admin-nav-button" type="button" data-admin-nav="eventos" data-admin-module="eventos"><span>□</span>Eventos</button>
         <button class="admin-nav-button" type="button" data-admin-nav="atendimento" data-admin-module="atendimento"><span>?</span>Atendimento</button>
       </nav>
-      <div class="admin-sidebar-footer">
-        <a class="button button-secondary" href="/">Página pública</a>
-      </div>
+      <div class="admin-sidebar-footer"><a class="button button-secondary" href="/">Página pública</a></div>
     </aside>
 
     <main class="admin-main" id="admin-content">
-      <section class="admin-loading" data-admin-loading>
-        <div><div class="admin-spinner"></div><h1>Carregando painel…</h1><p>Validando suas permissões e os dados da organização.</p></div>
-      </section>
+      <section class="admin-loading" data-admin-loading><div><div class="admin-spinner"></div><h1>Carregando painel…</h1><p>Validando suas permissões e os dados da organização.</p></div></section>
 
       <section class="admin-denied" data-admin-denied hidden>
-        <p class="admin-eyebrow">Acesso restrito</p>
-        <h1>Você não possui permissão administrativa.</h1>
-        <p>Seu cadastro está ativo como membro. Caso você faça parte da equipe, uma administradora precisa atribuir o papel adequado.</p>
-        <a class="button" href="/app/">Voltar para minha área</a>
+        <p class="admin-eyebrow">Acesso restrito</p><h1>Você não possui permissão administrativa.</h1><p>Seu cadastro está ativo como membro. Caso você faça parte da equipe, uma administradora precisa atribuir o papel adequado.</p><a class="button" href="/app/">Voltar para minha área</a>
       </section>
 
-      <section class="admin-error" data-admin-error hidden>
-        <h1>Não foi possível carregar o painel.</h1>
-        <p data-admin-error-message>Tente novamente.</p>
-        <button class="button" type="button" data-admin-retry>Carregar novamente</button>
-      </section>
+      <section class="admin-error" data-admin-error hidden><h1>Não foi possível carregar o painel.</h1><p data-admin-error-message>Tente novamente.</p><button class="button" type="button" data-admin-retry>Carregar novamente</button></section>
 
       <div data-admin-content hidden>
         <section class="admin-section" data-admin-section="visao-geral">
-          <header class="admin-page-header">
-            <div><p class="admin-eyebrow">Gestão da plataforma</p><h1>Visão geral</h1><p>Indicadores e acessos liberados para seu papel.</p></div>
-            <div class="admin-user-card"><span class="admin-avatar" data-admin-initials>LP</span><div><strong data-admin-name>Carregando…</strong><small data-admin-roles></small></div></div>
-          </header>
-
+          <header class="admin-page-header"><div><p class="admin-eyebrow">Gestão da plataforma</p><h1>Visão geral</h1><p>Indicadores e acessos liberados para seu papel.</p></div><div class="admin-user-card"><span class="admin-avatar" data-admin-initials>LP</span><div><strong data-admin-name>Carregando…</strong><small data-admin-roles></small></div></div></header>
           <div class="admin-metrics">
             <article><span>Usuárias</span><strong data-admin-count="members">—</strong><small>Vínculos na organização</small></article>
             <article><span>Cursos</span><strong data-admin-count="courses">—</strong><small>Todos os estados</small></article>
@@ -78,20 +64,11 @@
             <article><span>Eventos</span><strong data-admin-count="events">—</strong><small>Experiências cadastradas</small></article>
             <article><span>Atendimentos</span><strong data-admin-count="support">—</strong><small>Chamados e contatos</small></article>
           </div>
-
           <div class="admin-dashboard-grid">
-            <section class="admin-panel">
-              <div class="admin-panel-header"><div><h2>Módulos disponíveis</h2><p>O acesso é definido pelas permissões do banco.</p></div></div>
-              <div class="admin-module-grid" data-admin-modules></div>
-            </section>
-
-            <section class="admin-panel">
-              <div class="admin-panel-header"><div><h2>Permissões ativas</h2><p>Resumo técnico do seu acesso.</p></div></div>
-              <div class="permission-list" data-admin-permissions></div>
-            </section>
+            <section class="admin-panel"><div class="admin-panel-header"><div><h2>Módulos disponíveis</h2><p>O acesso é definido pelas permissões do banco.</p></div></div><div class="admin-module-grid" data-admin-modules></div></section>
+            <section class="admin-panel"><div class="admin-panel-header"><div><h2>Permissões ativas</h2><p>Resumo técnico do seu acesso.</p></div></div><div class="permission-list" data-admin-permissions></div></section>
           </div>
         </section>
-
         <section class="admin-section" data-admin-section="cursos" hidden></section>
         <section class="admin-section" data-admin-section="pessoas" hidden></section>
         <section class="admin-section" data-admin-section="comunidade" hidden></section>
@@ -106,8 +83,8 @@
     <button class="admin-nav-button is-active" type="button" data-admin-nav="visao-geral"><span>⌂</span><small>Início</small></button>
     <button class="admin-nav-button" type="button" data-admin-nav="cursos" data-admin-module="cursos"><span>▤</span><small>Cursos</small></button>
     <button class="admin-nav-button" type="button" data-admin-nav="pessoas" data-admin-module="pessoas"><span>○</span><small>Pessoas</small></button>
+    <button class="admin-nav-button" type="button" data-admin-nav="comunidade" data-admin-module="comunidade"><span>◌</span><small>Comunidade</small></button>
     <button class="admin-nav-button" type="button" data-admin-nav="conteudo" data-admin-module="conteudo"><span>◇</span><small>Conteúdo</small></button>
-    <button class="admin-nav-button" type="button" data-admin-nav="atendimento" data-admin-module="atendimento"><span>?</span><small>Suporte</small></button>
   </nav>
 </body>
 </html>
