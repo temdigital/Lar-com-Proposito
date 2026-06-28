@@ -5,6 +5,16 @@ const message = document.querySelector('[data-form-message]');
 const callbackStatus = document.querySelector('[data-callback-status]');
 const callbackLogin = document.querySelector('[data-callback-login]');
 
+function insertOfficialAddressNote() {
+  const card = document.querySelector('.auth-card');
+  if (!card || card.querySelector('.auth-security-note')) return;
+
+  const note = document.createElement('aside');
+  note.className = 'auth-security-note';
+  note.innerHTML = '<strong>Endereço oficial nesta fase</strong><span>lar-com-proposito.vercel.app</span><a href="/seguranca.html">Como reconhecer um acesso seguro</a>';
+  card.insertBefore(note, card.firstChild);
+}
+
 function showMessage(text, type = 'info') {
   if (!message) return;
   message.textContent = text;
@@ -164,4 +174,5 @@ form?.addEventListener('submit', async (event) => {
   }
 });
 
+insertOfficialAddressNote();
 initializeAuthPage();

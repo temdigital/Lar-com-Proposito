@@ -5,12 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Lar com Propósito: formação, espiritualidade, mesa posta e comunidade para mulheres que desejam edificar suas famílias com amor.">
   <meta name="theme-color" content="#F9F6F0">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Lar com Propósito | Mulheres que edificam com amor">
+  <meta property="og:description" content="Formação, espiritualidade, mesa posta e comunidade para mulheres que desejam edificar suas famílias com amor.">
+  <meta property="og:url" content="https://lar-com-proposito.vercel.app/">
+  <link rel="canonical" href="https://lar-com-proposito.vercel.app/">
   <title>Lar com Propósito | Mulheres que edificam com amor</title>
   <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="/public/manifest.webmanifest">
   <link rel="stylesheet" href="/src/styles/tokens.css">
   <link rel="stylesheet" href="/src/styles/global.css">
   <link rel="stylesheet" href="/src/styles/home.css">
+  <link rel="stylesheet" href="/src/styles/trust.css">
   <script type="module" src="/src/js/site.js"></script>
 </head>
 <body>
@@ -44,6 +51,7 @@
         <a href="#jornada">Jornada</a>
         <a href="#comunidade">Comunidade</a>
         <a href="#clube">Clube</a>
+        <a href="/sobre.html">Sobre</a>
         <a class="button button-small button-secondary" href="/login.html">Entrar</a>
         <a class="button button-small" href="/cadastro.html">Criar conta</a>
       </nav>
@@ -164,6 +172,39 @@
       </div>
     </section>
 
+    <section class="section trust-section" id="transparencia">
+      <div class="container">
+        <div class="trust-heading">
+          <div>
+            <p class="eyebrow">Transparência e cuidado</p>
+            <h2>Um ambiente construído para inspirar confiança.</h2>
+          </div>
+          <p>O projeto está em fase inicial e usa temporariamente o endereço oficial da Vercel. Mantemos informações públicas sobre segurança, privacidade e funcionamento da plataforma.</p>
+        </div>
+
+        <div class="trust-grid">
+          <article class="trust-card">
+            <span class="trust-icon" aria-hidden="true">✓</span>
+            <h3>Endereço oficial</h3>
+            <p>O acesso legítimo nesta fase é feito pelo domínio <strong>lar-com-proposito.vercel.app</strong>.</p>
+            <a href="/seguranca.html">Ver orientações de segurança</a>
+          </article>
+          <article class="trust-card">
+            <span class="trust-icon" aria-hidden="true">§</span>
+            <h3>Privacidade clara</h3>
+            <p>Explicamos quais dados são usados, por que são necessários e quais direitos cada pessoa possui.</p>
+            <a href="/privacidade.html">Ler a Política de Privacidade</a>
+          </article>
+          <article class="trust-card">
+            <span class="trust-icon" aria-hidden="true">?</span>
+            <h3>Canal de contato</h3>
+            <p>Dúvidas gerais, questões técnicas e solicitações de privacidade podem ser encaminhadas pelo formulário.</p>
+            <a href="/contato.html">Acessar o contato</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section class="section final-cta">
       <div class="container narrow center">
         <p class="eyebrow">Primeiros passos</p>
@@ -175,27 +216,46 @@
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-grid">
-      <div>
-        <strong>Lar com Propósito</strong>
-        <p>Mulheres que edificam com amor.</p>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand-block">
+          <strong class="footer-wordmark">Lar com Propósito</strong>
+          <p>Mulheres que edificam com amor, presença, serviço e beleza no cotidiano.</p>
+          <span class="official-address">lar-com-proposito.vercel.app</span>
+        </div>
+        <div>
+          <strong class="footer-heading">Projeto</strong>
+          <nav class="footer-links" aria-label="Links do projeto">
+            <a href="/sobre.html">Sobre</a>
+            <a href="/#jornada">Jornada</a>
+            <a href="/#comunidade">Comunidade</a>
+            <a href="/contato.html">Contato</a>
+          </nav>
+        </div>
+        <div>
+          <strong class="footer-heading">Transparência</strong>
+          <nav class="footer-links" aria-label="Links legais e de segurança">
+            <a href="/seguranca.html">Segurança</a>
+            <a href="/termos.html">Termos de Uso</a>
+            <a href="/privacidade.html">Privacidade</a>
+            <a href="/cookies.html">Cookies</a>
+          </nav>
+        </div>
       </div>
-      <nav aria-label="Links institucionais">
-        <a href="/termos.html">Termos de Uso</a>
-        <a href="/privacidade.html">Privacidade</a>
-        <a href="/cookies.html">Cookies</a>
-      </nav>
-      <p class="copyright">© <span data-current-year></span> Lar com Propósito.</p>
+      <div class="footer-bottom">
+        <p>© <span data-current-year></span> Lar com Propósito.</p>
+        <p>Conexão protegida por HTTPS.</p>
+      </div>
     </div>
   </footer>
 
   <section class="cookie-banner" aria-label="Preferências de cookies" hidden data-cookie-banner>
     <div>
       <strong>Sua privacidade importa</strong>
-      <p>Usamos apenas recursos necessários nesta etapa. Cookies opcionais somente serão ativados após sua autorização.</p>
+      <p>Usamos apenas recursos necessários nesta etapa. Consulte a <a href="/cookies.html">Política de Cookies</a>.</p>
     </div>
     <div class="cookie-actions">
-      <button class="button button-small button-secondary" type="button" data-cookie-reject>Recusar opcionais</button>
+      <button class="button button-small button-secondary" type="button" data-cookie-reject>Somente necessários</button>
       <button class="button button-small" type="button" data-cookie-accept>Aceitar</button>
     </div>
   </section>
