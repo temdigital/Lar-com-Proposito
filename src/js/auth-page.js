@@ -4,6 +4,27 @@ const form = document.querySelector('[data-auth-form]');
 const message = document.querySelector('[data-form-message]');
 const callbackStatus = document.querySelector('[data-callback-status]');
 const callbackLogin = document.querySelector('[data-callback-login]');
+const query = new URLSearchParams(window.location.search);
+
+function safeNextPath() {
+  const next = query.get('next');
+  if (!next || !next.startsWith('/') || next.startsWith('//')) return '/app/';
+  return next;
+}
+
+function callbackUrl() {
+  return `${window.location.origin}/auth/callback.html?next=${encodeURIComponent(safeNextPath())}`;
+}
+
+function redirectAfterAuthentication() {
+  window.location.replace(safeNextPath());
+}
+
+function prefillEmail() {
+  const email = query.get('email');
+  const input = form?.elements?.email;
+  if (email && input && !input.value) input.value = email;
+}
 
 function insertOfficialAddressNote() {
   const card = document.querySelector('.auth-card');
@@ -50,7 +71,7 @@ async function handleLogin(data) {
   });
   if (error) throw error;
   await supabase.rpc('register_last_access');
-  window.location.replace('/app/');
+  redirectAfterAuthentication();
 }
 
 async function handleSignup(data) {
@@ -66,7 +87,7 @@ async function handleSignup(data) {
     email: String(data.get('email')).trim(),
     password,
     options: {
-      emailRedirectTo: `${window.location.origin}/auth/callback.html`,
+      emailRedirectTo: callbackUrl(),
       data: {
         nome: String(data.get('name')).trim(),
         whatsapp: String(data.get('whatsapp')).trim()
@@ -78,11 +99,11 @@ async function handleSignup(data) {
   form.reset();
   if (signupData.session) {
     showMessage('Conta criada e sessão iniciada. Redirecionando…', 'success');
-    window.location.replace('/app/');
+    redirectAfterAuthentication();
     return;
   }
 
-  showMessage('Conta criada. Confirme o endereço enviado ao seu e-mail antes de entrar.', 'success');
+  showMessage('Conta criada. Confirme o endereço enviado ao seu e-mail para continuar o convite.', 'success');
 }
 
 async function handleRecovery(data) {
@@ -111,7 +132,7 @@ async function handlePasswordReset(data) {
   if (error) throw error;
   form.reset();
   showMessage('Senha atualizada com sucesso. Redirecionando para sua área…', 'success');
-  window.location.replace('/app/');
+  redirectAfterAuthentication();
 }
 
 async function initializeAuthPage() {
@@ -123,18 +144,21 @@ async function initializeAuthPage() {
     if (callbackStatus) {
       if (!data.session) {
         callbackStatus.textContent = 'O link expirou ou já foi utilizado. Solicite um novo acesso.';
-        if (callbackLogin) callbackLogin.hidden = false;
+        if (callbackLogin) {
+          callbackLogin.hidden = false;
+          callbackLogin.href = `/login?next=${encodeURIComponent(safeNextPath())}`;
+        }
         return;
       }
 
       await supabase.rpc('register_last_access');
-      callbackStatus.textContent = 'E-mail confirmado. Redirecionando para sua área…';
-      window.location.replace('/app/');
+      callbackStatus.textContent = 'E-mail confirmado. Redirecionando para continuar…';
+      redirectAfterAuthentication();
       return;
     }
 
     if (data.session && form?.dataset.authForm === 'login') {
-      window.location.replace('/app/');
+      redirectAfterAuthentication();
     }
 
     if (!data.session && form?.dataset.authForm === 'reset') {
@@ -174,5 +198,6 @@ form?.addEventListener('submit', async (event) => {
   }
 });
 
+prefillEmail();
 insertOfficialAddressNote();
 initializeAuthPage();
