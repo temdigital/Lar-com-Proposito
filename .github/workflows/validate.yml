@@ -28,11 +28,14 @@ jobs:
           node --check src/js/admin-curriculum.js
           node --check src/js/admin-people.js
           node --check src/js/admin-community.js
+          node --check src/js/admin-content.js
+          node --check src/js/admin-content-page.js
           node --check src/js/invite-page.js
           node --check src/js/auth-page.js
           node --check src/js/member.js
           node --check src/js/member-community.js
           node --check src/js/member-community-page.js
+          node --check src/js/member-content-page.js
 
       - name: Build static site
         run: npm run build
@@ -49,19 +52,24 @@ jobs:
           test -f dist/src/js/member.js
           test -f dist/src/js/member-community.js
           test -f dist/src/js/member-community-page.js
+          test -f dist/src/js/member-content-page.js
           test -f dist/src/js/admin.js
           test -f dist/src/js/admin-courses.js
           test -f dist/src/js/admin-curriculum.js
           test -f dist/src/js/admin-people.js
           test -f dist/src/js/admin-community.js
+          test -f dist/src/js/admin-content.js
+          test -f dist/src/js/admin-content-page.js
           test -f dist/src/js/invite-page.js
           test -f dist/src/styles/app.css
           test -f dist/src/styles/member-community.css
+          test -f dist/src/styles/member-content.css
           test -f dist/src/styles/admin.css
           test -f dist/src/styles/admin-courses.css
           test -f dist/src/styles/admin-course-metrics.css
           test -f dist/src/styles/admin-people.css
           test -f dist/src/styles/admin-community.css
+          test -f dist/src/styles/admin-content.css
           test -f dist/src/styles/invite.css
           test -f dist/.well-known/security.txt
           test -f dist/sitemap.xml
