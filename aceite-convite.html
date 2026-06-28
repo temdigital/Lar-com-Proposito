@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#431520">
+  <title>Aceitar convite | Lar com Propósito</title>
+  <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/src/styles/tokens.css">
+  <link rel="stylesheet" href="/src/styles/global.css">
+  <link rel="stylesheet" href="/src/styles/invite.css">
+  <script type="module" src="/src/js/invite-page.js"></script>
+</head>
+<body class="invite-page">
+  <main class="invite-layout">
+    <section class="invite-brand-panel">
+      <a class="brand" href="/" aria-label="Página inicial do Lar com Propósito">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M13 39C13 23 22 13 32 10c10 3 19 13 19 29"/><path d="M19 39c4-7 8-10 13-10s9 3 13 10"/><circle cx="32" cy="43" r="4"/></svg></span>
+        <span class="brand-copy"><strong>Lar com Propósito</strong><small>Mulheres que edificam com amor</small></span>
+      </a>
+      <div><p class="invite-eyebrow">Convite pessoal</p><h1>Um lugar preparado para caminhar com propósito.</h1><p>Confirme sua conta para integrar a equipe ou acessar os recursos liberados para você.</p></div>
+      <small>Use somente o endereço oficial lar-com-proposito.vercel.app.</small>
+    </section>
+
+    <section class="invite-content-panel">
+      <div class="invite-card">
+        <div class="invite-loading" data-invite-loading><span class="invite-spinner" aria-hidden="true"></span><h2>Validando convite…</h2><p>Aguarde enquanto conferimos o link recebido.</p></div>
+
+        <div data-invite-invalid hidden>
+          <p class="invite-eyebrow">Convite indisponível</p>
+          <h2>Este link não pode mais ser utilizado.</h2>
+          <p data-invite-invalid-message>O convite pode ter expirado, sido revogado ou já ter sido aceito.</p>
+          <a class="button button-secondary" href="/fale-conosco">Falar com a equipe</a>
+        </div>
+
+        <div data-invite-valid hidden>
+          <p class="invite-eyebrow">Você foi convidada</p>
+          <h2 data-invite-name>Bem-vinda</h2>
+          <p class="invite-intro">Confira os dados antes de continuar.</p>
+
+          <dl class="invite-details">
+            <div><dt>Organização</dt><dd data-invite-organization></dd></div>
+            <div><dt>E-mail do convite</dt><dd data-invite-email></dd></div>
+            <div><dt>Papel de acesso</dt><dd data-invite-role></dd></div>
+            <div data-invite-job-row hidden><dt>Função</dt><dd data-invite-job></dd></div>
+            <div><dt>Validade</dt><dd data-invite-expiry></dd></div>
+          </dl>
+
+          <blockquote class="invite-message" data-invite-message-row hidden><p data-invite-message></p></blockquote>
+
+          <div data-invite-guest hidden>
+            <p class="invite-guidance">Crie uma conta usando exatamente o e-mail do convite ou entre caso já possua cadastro.</p>
+            <div class="invite-actions"><a class="button" href="#" data-invite-signup>Criar minha conta</a><a class="button button-secondary" href="#" data-invite-login>Já tenho conta</a></div>
+          </div>
+
+          <div data-invite-account hidden>
+            <p class="invite-account-note">Você está conectada como <strong data-current-email></strong>.</p>
+            <p class="invite-feedback" data-invite-feedback role="status" aria-live="polite"></p>
+            <div class="invite-actions"><button class="button" type="button" data-accept-invite>Aceitar convite</button><button class="button button-secondary" type="button" data-invite-logout>Sair desta conta</button></div>
+          </div>
+
+          <div data-invite-mismatch hidden>
+            <p class="invite-feedback is-visible is-error">A conta conectada não corresponde ao e-mail do convite. Saia e entre com o endereço correto.</p>
+            <button class="button button-secondary" type="button" data-invite-logout>Sair desta conta</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
