@@ -24,6 +24,8 @@ Endereço oficial nesta fase:
 - dashboard mobile-first da membro com cursos, comunidade, conteúdos, eventos, assinatura e perfil;
 - painel administrativo protegido por papéis e permissões;
 - indicadores administrativos condicionados ao acesso autorizado;
+- gestão de cursos com criação, edição, filtros, preços, formas de acesso, certificados e arquivamento;
+- gestão do conteúdo programático com módulos, liberação gradual, videoaulas, textos, prévias e arquivamento;
 - páginas Sobre, Fale conosco, Termos, Privacidade e Cookies;
 - formulário público de contato protegido por RLS;
 - robots.txt, sitemap.xml, security.txt e página 404;
@@ -39,8 +41,10 @@ Migrations posteriores:
 2. `015_verify_contact.sql`
 3. `016_member_dashboard.sql`
 4. `017_verify_member_dashboard.sql`
+5. `018_lock_member_context.sql`
+6. `019_verify_member_context_lock.sql`
 
-A promoção da primeira administradora é feita manualmente por `supabase/manual/promote_first_admin.sql`, depois da criação e confirmação da conta.
+A primeira administradora foi promovida com os papéis `admin` e `membro`. O procedimento auditável permanece documentado em `supabase/manual/promote_first_admin.sql`.
 
 Consulte `docs/instalacao-supabase.md` antes de executar novos arquivos.
 
