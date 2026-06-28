@@ -11,7 +11,7 @@ function insertOfficialAddressNote() {
 
   const note = document.createElement('aside');
   note.className = 'auth-security-note';
-  note.innerHTML = '<strong>Endereço oficial nesta fase</strong><span>lar-com-proposito.vercel.app</span><a href="/seguranca.html">Como reconhecer um acesso seguro</a>';
+  note.innerHTML = '<strong>Endereço oficial nesta fase</strong><span>lar-com-proposito.vercel.app</span><a href="/sobre.html">Conheça o projeto</a>';
   card.insertBefore(note, card.firstChild);
 }
 
