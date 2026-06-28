@@ -26,6 +26,9 @@ Endereço oficial nesta fase:
 - indicadores administrativos condicionados ao acesso autorizado;
 - gestão de cursos com criação, edição, filtros, preços, formas de acesso, certificados e arquivamento;
 - gestão do conteúdo programático com módulos, liberação gradual, videoaulas, textos, prévias e arquivamento;
+- gestão de pessoas com consulta, filtros, situação do vínculo, função e papéis organizacionais;
+- convites com token criptográfico armazenado somente como hash, revogação e aceite autenticado;
+- proteção contra autossuspensão, autorremoção do papel administrativo e remoção da última administradora;
 - páginas Sobre, Fale conosco, Termos, Privacidade e Cookies;
 - formulário público de contato protegido por RLS;
 - robots.txt, sitemap.xml, security.txt e página 404;
@@ -43,6 +46,8 @@ Migrations posteriores:
 4. `017_verify_member_dashboard.sql`
 5. `018_lock_member_context.sql`
 6. `019_verify_member_context_lock.sql`
+7. `020_people_access.sql`
+8. `021_verify_people_access.sql`
 
 A primeira administradora foi promovida com os papéis `admin` e `membro`. O procedimento auditável permanece documentado em `supabase/manual/promote_first_admin.sql`.
 
