@@ -30,16 +30,16 @@ Depois da fundação, execute novos arquivos em ordem numérica:
 8. `supabase/migrations/021_verify_people_access.sql`
 9. `supabase/migrations/022_lock_people_access.sql`
 10. `supabase/migrations/023_verify_people_access_lock.sql`
+11. `supabase/migrations/024_community_management.sql`
+12. `supabase/migrations/025_verify_community_management.sql`
+13. `supabase/migrations/026_community_admin_visibility.sql`
+14. `supabase/migrations/027_verify_community_admin_visibility.sql`
+15. `supabase/migrations/028_community_member_feed.sql`
+16. `supabase/migrations/029_verify_community_member_feed.sql`
 
 O arquivo `014_contact_messages.sql` cria o canal público de contato com inserção anônima controlada e leitura restrita à equipe com a permissão `support.manage`.
 
-O arquivo `015_verify_contact.sql` é somente leitura e deve confirmar:
-
-- `table_exists = true`;
-- `policy_count = 3`;
-- `anon_can_insert = true`;
-- `authenticated_can_select = true`;
-- `authenticated_can_update = true`.
+O arquivo `015_verify_contact.sql` é somente leitura e deve confirmar `table_exists`, `anon_can_insert`, `authenticated_can_select` e `authenticated_can_update` como `true`.
 
 O arquivo `016_member_dashboard.sql` cria a função segura `get_my_app_context()`. Ela fornece somente os dados da pessoa autenticada, seu vínculo, papéis, permissões e contadores necessários para a área da membro e o painel administrativo.
 
@@ -47,44 +47,46 @@ O arquivo `017_verify_member_dashboard.sql` verifica a função inicial. Caso `a
 
 O arquivo `018_lock_member_context.sql` remove explicitamente a permissão de execução dos papéis `PUBLIC` e `anon` e mantém a execução somente para `authenticated`.
 
-O arquivo `019_verify_member_context_lock.sql` deve retornar:
+O arquivo `019_verify_member_context_lock.sql` deve retornar todos os campos como `true`, incluindo `anonymous_cannot_execute`.
 
-- `context_function_exists = true`;
-- `authenticated_can_execute = true`;
-- `anonymous_can_execute = false`;
-- `anonymous_cannot_execute = true`.
+O arquivo `020_people_access.sql` cria atualização de membros e papéis, convites, aceite autenticado, proteção da última administradora e auditoria.
 
-O arquivo `020_people_access.sql` cria as operações protegidas do módulo Pessoas e acessos:
+O arquivo `021_verify_people_access.sql` faz a primeira conferência. Caso permissões anônimas indevidas sejam encontradas, execute os arquivos `022` e `023`.
 
-- atualização de membro, vínculo e papéis;
-- proteção contra autossuspensão e remoção da última administradora;
-- criação e revogação de convites;
-- token armazenado somente como hash;
-- visualização segura do convite;
-- aceite autenticado com conferência do e-mail;
-- registro das operações em `audit_logs`.
+O arquivo `022_lock_people_access.sql` revoga de `PUBLIC` e `anon` as funções administrativas e concede novamente somente ao papel `authenticated`.
 
-O arquivo `021_verify_people_access.sql` faz a primeira conferência. Caso `anonymous_cannot_update_member` ou `anonymous_cannot_create_invitation` retorne `false`, execute obrigatoriamente os arquivos `022` e `023`.
+O arquivo `023_verify_people_access_lock.sql` foi validado com todos os 14 campos retornando `true` em 28/06/2026.
 
-O arquivo `022_lock_people_access.sql` revoga explicitamente de `PUBLIC` e `anon` a execução das funções administrativas e concede novamente apenas ao papel `authenticated`. A função pública de prévia do convite permanece acessível ao visitante, pois ela somente valida o token e retorna dados limitados do convite.
+## Comunidade
 
-O arquivo `023_verify_people_access_lock.sql` deve retornar todos os campos como `true`, inclusive:
+O arquivo `024_community_management.sql` cria:
 
-- `authenticated_can_update_member`;
-- `authenticated_can_create_invitation`;
-- `authenticated_can_revoke_invitation`;
-- `authenticated_can_accept_invitation`;
-- `anonymous_cannot_update_member`;
-- `anonymous_cannot_create_invitation`;
-- `anonymous_cannot_revoke_invitation`;
-- `anonymous_cannot_accept_invitation`;
-- `anonymous_can_preview_invitation`.
+- moderação auditável de publicação, comentário ou perfil;
+- ocultação, remoção e restauração de conteúdo;
+- advertência, silêncio temporário, suspensão e banimento;
+- resolução ou descarte de denúncia;
+- reação segura com alternância de estado;
+- bloqueio explícito de execução anônima das funções protegidas.
+
+O arquivo `025_verify_community_management.sql` deve retornar todos os campos como `true`.
+
+O arquivo `026_community_admin_visibility.sql` ajusta as policies de leitura para que administradoras e moderadoras possam visualizar rascunhos, conteúdo oculto e conteúdo denunciado, sem ampliar o acesso público.
+
+O arquivo `027_verify_community_admin_visibility.sql` deve retornar:
+
+- `community_spaces_read_policy_ok = true`;
+- `community_posts_read_policy_ok = true`;
+- `community_comments_read_policy_ok = true`.
+
+O arquivo `028_community_member_feed.sql` cria o feed seguro da comunidade com dados públicos limitados das autoras, comentários, contagens de reações e reações da pessoa conectada. Também impede novas publicações e comentários durante suspensão comunitária ativa.
+
+O arquivo `029_verify_community_member_feed.sql` deve retornar todos os campos como `true`, incluindo bloqueio anônimo das funções e presença das policies de inserção.
 
 ## Primeira administradora
 
 A primeira administradora foi promovida com sucesso para a conta `cafedeeducadoras@gmail.com`, com os papéis `admin` e `membro`.
 
-O procedimento auditável permanece disponível em `supabase/manual/promote_first_admin.sql` para recuperação controlada ou instalação em outro ambiente. O script é idempotente, mantém o vínculo organizacional ativo, atribui os dois papéis e registra a promoção em `audit_logs`.
+O procedimento auditável permanece disponível em `supabase/manual/promote_first_admin.sql` para recuperação controlada ou instalação em outro ambiente.
 
 ## Interrupção obrigatória em caso de erro
 
@@ -109,5 +111,6 @@ Depois das migrations:
 6. testar a área da membro em smartphone e desktop;
 7. validar que pessoas sem permissão não entram em `/admin/`;
 8. criar um convite de teste e concluir o fluxo em `/aceite-convite`;
-9. testar suspensão, reativação e troca de papéis com uma conta secundária;
-10. revisar periodicamente logs, RLS e dependências.
+9. criar um espaço de comunidade e publicar uma conversa de teste;
+10. testar denúncia, moderação, suspensão e restauração com uma conta secundária;
+11. revisar periodicamente logs, RLS e dependências.
