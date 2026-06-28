@@ -27,6 +27,7 @@ function validate(data) {
   if (subject.length < 4) throw new Error('Informe um assunto com pelo menos 4 caracteres.');
   if (message.length < 20) throw new Error('Escreva uma mensagem com pelo menos 20 caracteres.');
   if (message.length > 3000) throw new Error('A mensagem deve ter no máximo 3000 caracteres.');
+  if (!data.get('privacy_ack')) throw new Error('É necessário aceitar a Política de Privacidade para enviar a mensagem.');
 }
 
 form?.addEventListener('submit', async (event) => {
