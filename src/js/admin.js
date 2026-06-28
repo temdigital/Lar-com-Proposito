@@ -8,6 +8,7 @@ const errorMessageElement = document.querySelector('[data-admin-error-message]')
 const contentElement = document.querySelector('[data-admin-content]');
 const retryButton = document.querySelector('[data-admin-retry]');
 const logoutButton = document.querySelector('[data-admin-logout]');
+const navigationElements = document.querySelectorAll('[data-admin-navigation]');
 
 const moduleDefinitions = [
   { id: 'cursos', title: 'Cursos e matrículas', description: 'Criar formações, organizar aulas e acompanhar alunas.', permissions: ['courses.read','courses.manage','courses.edit_assigned','enrollments.read','enrollments.manage'] },
@@ -20,6 +21,7 @@ const moduleDefinitions = [
   { id: 'configuracoes', title: 'Configurações', description: 'Administrar a organização, documentos e logs.', permissions: ['organization.manage','organization.settings','legal.manage','logs.read'] }
 ];
 
+const moduleMap = new Map(moduleDefinitions.map((module) => [module.id, module]));
 const adminPermissionSet = new Set(moduleDefinitions.flatMap((module) => module.permissions));
 const state = { session: null, context: null, permissions: new Set(), counts: {} };
 
@@ -47,6 +49,10 @@ function fullName(profile = {}) {
 
 function canAny(permissionCodes) {
   return Boolean(state.context?.profile?.is_superadmin) || permissionCodes.some((code) => state.permissions.has(code));
+}
+
+function setNavigationVisible(visible) {
+  navigationElements.forEach((element) => { element.hidden = !visible; });
 }
 
 function showOnly(element) {
@@ -155,6 +161,13 @@ function renderCounts() {
   });
 }
 
+function syncNavigationAccess() {
+  document.querySelectorAll('[data-admin-module]').forEach((button) => {
+    const definition = moduleMap.get(button.dataset.adminModule);
+    button.hidden = !definition || !canAny(definition.permissions);
+  });
+}
+
 function renderModules() {
   const container = document.querySelector('[data-admin-modules]');
   container.innerHTML = moduleDefinitions.map((module) => {
@@ -197,7 +210,12 @@ function moduleContent(section) {
 }
 
 function showSection(sectionName) {
-  const section = sectionName || 'visao-geral';
+  let section = sectionName || 'visao-geral';
+  if (section !== 'visao-geral') {
+    const definition = moduleMap.get(section);
+    if (!definition || !canAny(definition.permissions)) section = 'visao-geral';
+  }
+
   document.querySelectorAll('[data-admin-section]').forEach((element) => {
     element.hidden = element.dataset.adminSection !== section;
     if (!element.hidden && section !== 'visao-geral' && !element.innerHTML.trim()) {
@@ -221,6 +239,7 @@ function hasAdministrativeAccess() {
 }
 
 async function initialize() {
+  setNavigationVisible(false);
   showOnly(loadingElement);
 
   try {
@@ -245,13 +264,15 @@ async function initialize() {
     renderCounts();
     renderModules();
     renderPermissions();
+    syncNavigationAccess();
+    setNavigationVisible(true);
     showOnly(contentElement);
 
     const requested = window.location.hash.replace('#','');
-    const allowedSection = ['visao-geral','cursos','pessoas','comunidade','conteudo','eventos','atendimento'].includes(requested) ? requested : 'visao-geral';
-    showSection(allowedSection);
+    showSection(requested || 'visao-geral');
   } catch (error) {
     console.error(error);
+    setNavigationVisible(false);
     if (errorMessageElement) errorMessageElement.textContent = 'Não foi possível validar suas permissões ou consultar os dados da organização.';
     showOnly(errorElement);
   }
