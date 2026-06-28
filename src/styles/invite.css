@@ -1,0 +1,227 @@
+.invite-page {
+  min-height: 100dvh;
+  background: var(--color-cream);
+}
+
+.invite-layout {
+  display: grid;
+  min-height: 100dvh;
+}
+
+.invite-brand-panel,
+.invite-content-panel {
+  padding: clamp(1.25rem, 5vw, 3rem);
+}
+
+.invite-brand-panel {
+  display: grid;
+  align-content: space-between;
+  gap: 2rem;
+  min-height: 36dvh;
+  background: var(--color-wine-dark);
+  color: white;
+}
+
+.invite-brand-panel .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  color: white;
+  text-decoration: none;
+}
+
+.invite-brand-panel .brand-mark {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.invite-brand-panel .brand-mark svg {
+  stroke: #eadba9;
+}
+
+.invite-brand-panel .brand-copy {
+  display: grid;
+}
+
+.invite-brand-panel .brand-copy strong {
+  color: #eadba9;
+  font-family: var(--font-brand);
+  font-size: clamp(1.5rem, 7vw, 2rem);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.invite-brand-panel .brand-copy small {
+  margin-top: .25rem;
+  color: rgba(255,255,255,.72);
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.invite-brand-panel h1 {
+  max-width: 10ch;
+  margin-bottom: .8rem;
+  color: white;
+  font-size: clamp(2.2rem, 10vw, 4.8rem);
+}
+
+.invite-brand-panel p {
+  max-width: 46ch;
+  margin-bottom: 0;
+  color: rgba(255,255,255,.78);
+}
+
+.invite-brand-panel > small {
+  color: rgba(255,255,255,.62);
+}
+
+.invite-eyebrow {
+  margin-bottom: .45rem !important;
+  color: var(--color-gold-dark) !important;
+  font-size: .72rem;
+  font-weight: 850;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.invite-content-panel {
+  display: grid;
+  place-items: center;
+}
+
+.invite-card {
+  width: min(100%, 680px);
+  padding: clamp(1.25rem, 5vw, 2.5rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.invite-card h2 {
+  margin-bottom: .45rem;
+  font-size: clamp(1.8rem, 7vw, 2.8rem);
+}
+
+.invite-intro,
+.invite-loading p,
+.invite-guidance,
+.invite-account-note,
+[data-invite-invalid] p {
+  color: var(--color-muted);
+}
+
+.invite-loading {
+  text-align: center;
+}
+
+.invite-spinner {
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1rem;
+  border: 3px solid rgba(94,31,45,.15);
+  border-top-color: var(--color-wine);
+  border-radius: 50%;
+  animation: invite-spin .8s linear infinite;
+}
+
+.invite-details {
+  display: grid;
+  gap: .7rem;
+  margin: 1.25rem 0;
+}
+
+.invite-details > div {
+  display: grid;
+  gap: .15rem;
+  padding: .8rem .9rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-cream);
+}
+
+.invite-details dt {
+  color: var(--color-muted);
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.invite-details dd {
+  margin: 0;
+  color: var(--color-wine);
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.invite-message {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-left: 4px solid var(--color-gold-dark);
+  background: #fffaf0;
+}
+
+.invite-message p {
+  margin: 0;
+  color: var(--color-ink);
+  font-style: italic;
+}
+
+.invite-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+  margin-top: 1rem;
+}
+
+.invite-actions .button {
+  flex: 1 1 12rem;
+}
+
+.invite-feedback {
+  display: none;
+  margin: .8rem 0 0;
+  padding: .8rem .9rem;
+  border-radius: var(--radius-sm);
+  font-size: .78rem;
+}
+
+.invite-feedback.is-visible {
+  display: block;
+}
+
+.invite-feedback.is-success {
+  background: #e3efe6;
+  color: #274f31;
+}
+
+.invite-feedback.is-error {
+  background: #f9e5e5;
+  color: #7b1f28;
+}
+
+@keyframes invite-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (min-width: 900px) {
+  .invite-layout {
+    grid-template-columns: minmax(340px, .9fr) minmax(0, 1.1fr);
+  }
+
+  .invite-brand-panel {
+    min-height: 100dvh;
+  }
+
+  .invite-details {
+    grid-template-columns: repeat(2, minmax(0,1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .invite-spinner { animation: none; }
+}
