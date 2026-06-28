@@ -18,10 +18,11 @@ Endereço oficial nesta fase:
 ## Recursos implementados
 
 - página institucional responsiva;
+- navegação pública padronizada com prioridade mobile;
 - logotipo tipográfico cursivo com conceito visual Altar Doméstico;
 - cadastro, confirmação de e-mail, login e recuperação de senha;
 - área inicial protegida da membro;
-- páginas Sobre, Segurança, Fale conosco, Termos, Privacidade e Cookies;
+- páginas Sobre, Fale conosco, Termos, Privacidade e Cookies;
 - formulário público de contato protegido por RLS;
 - robots.txt, sitemap.xml, security.txt e página 404;
 - banco multi-organização com cursos, comunidade, assinaturas, conteúdo, suporte e auditoria.
