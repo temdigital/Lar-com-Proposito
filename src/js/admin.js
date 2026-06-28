@@ -1,4 +1,5 @@
 import { getSupabaseClient } from './supabase.js';
+import { createCoursesAdmin } from './admin-courses.js';
 
 const supabase = getSupabaseClient();
 const loadingElement = document.querySelector('[data-admin-loading]');
@@ -23,7 +24,7 @@ const moduleDefinitions = [
 
 const moduleMap = new Map(moduleDefinitions.map((module) => [module.id, module]));
 const adminPermissionSet = new Set(moduleDefinitions.flatMap((module) => module.permissions));
-const state = { session: null, context: null, permissions: new Set(), counts: {} };
+const state = { session: null, context: null, permissions: new Set(), counts: {}, courseAdmin: null };
 
 function escapeHtml(value = '') {
   return String(value)
@@ -95,7 +96,7 @@ async function fallbackContext(user) {
   return {
     profile,
     organization: membership?.organization || {},
-    membership: membership ? { id: membership.id, status: membership.status, job_title: membership.job_title, joined_at: membership.joined_at } : {},
+    membership: membership ? { id: membership.id, organization_id: membership.organization_id, status: membership.status, job_title: membership.job_title, joined_at: membership.joined_at } : {},
     roles,
     permissions,
     counts: {}
@@ -113,9 +114,7 @@ async function exactCount(table, permissionCodes, filters = []) {
 
   try {
     let query = supabase.from(table).select('*', { count: 'exact', head: true });
-    filters.forEach(([method, column, value]) => {
-      query = query[method](column, value);
-    });
+    filters.forEach(([method, column, value]) => { query = query[method](column, value); });
     const { count, error } = await query;
     if (error) throw error;
     return count ?? 0;
@@ -161,6 +160,11 @@ function renderCounts() {
   });
 }
 
+async function refreshCounts() {
+  await loadCounts();
+  renderCounts();
+}
+
 function syncNavigationAccess() {
   document.querySelectorAll('[data-admin-module]').forEach((button) => {
     const definition = moduleMap.get(button.dataset.adminModule);
@@ -172,11 +176,12 @@ function renderModules() {
   const container = document.querySelector('[data-admin-modules]');
   container.innerHTML = moduleDefinitions.map((module) => {
     const allowed = canAny(module.permissions);
+    const active = module.id === 'cursos';
     return `<article class="admin-module-card${allowed ? '' : ' is-disabled'}">
-      <span class="status-pill">${allowed ? 'Acesso liberado' : 'Sem permissão'}</span>
+      <span class="status-pill">${allowed ? (active ? 'Disponível agora' : 'Acesso liberado') : 'Sem permissão'}</span>
       <div><h3>${escapeHtml(module.title)}</h3><p>${escapeHtml(module.description)}</p></div>
       ${allowed && ['cursos','pessoas','comunidade','conteudo','eventos','atendimento'].includes(module.id)
-        ? `<button class="button button-secondary" type="button" data-admin-open="${module.id}">Abrir módulo</button>`
+        ? `<button class="button button-secondary" type="button" data-admin-open="${module.id}">${active ? 'Abrir módulo' : 'Ver próxima etapa'}</button>`
         : ''}
     </article>`;
   }).join('');
@@ -190,15 +195,13 @@ function renderPermissions() {
   const container = document.querySelector('[data-admin-permissions]');
   const permissions = [...state.permissions].sort();
   if (state.context.profile?.is_superadmin) permissions.unshift('superadmin');
-
   container.innerHTML = permissions.length
     ? permissions.map((code) => `<span class="permission-chip">${escapeHtml(code)}</span>`).join('')
     : '<p>Nenhuma permissão administrativa foi atribuída.</p>';
 }
 
-function moduleContent(section) {
+function placeholderContent(section) {
   const definitions = {
-    cursos: ['Cursos e matrículas', 'O próximo passo será criar o cadastro de cursos, módulos, aulas, materiais e matrículas.'],
     pessoas: ['Pessoas e acessos', 'Este módulo reunirá membros, equipe, convites, papéis e permissões.'],
     comunidade: ['Comunidade', 'Este módulo reunirá espaços, publicações, denúncias e ações de moderação.'],
     conteudo: ['Conteúdo', 'Este módulo reunirá categorias, publicações, mídia e conteúdos exclusivos.'],
@@ -207,6 +210,17 @@ function moduleContent(section) {
   };
   const [title, description] = definitions[section] || ['Módulo', 'Funcionalidade em desenvolvimento.'];
   return `<div class="admin-empty-module"><p class="admin-eyebrow">Próxima etapa</p><h1>${title}</h1><p>${description}</p><button class="button button-secondary" type="button" data-admin-back>Voltar à visão geral</button></div>`;
+}
+
+function prepareSection(section, element) {
+  if (section === 'cursos') {
+    state.courseAdmin?.mount(element);
+    return;
+  }
+  if (section !== 'visao-geral' && !element.innerHTML.trim()) {
+    element.innerHTML = placeholderContent(section);
+    element.querySelector('[data-admin-back]')?.addEventListener('click', () => showSection('visao-geral'));
+  }
 }
 
 function showSection(sectionName) {
@@ -218,10 +232,7 @@ function showSection(sectionName) {
 
   document.querySelectorAll('[data-admin-section]').forEach((element) => {
     element.hidden = element.dataset.adminSection !== section;
-    if (!element.hidden && section !== 'visao-geral' && !element.innerHTML.trim()) {
-      element.innerHTML = moduleContent(section);
-      element.querySelector('[data-admin-back]')?.addEventListener('click', () => showSection('visao-geral'));
-    }
+    if (!element.hidden) prepareSection(section, element);
   });
 
   document.querySelectorAll('[data-admin-nav]').forEach((button) => {
@@ -258,6 +269,15 @@ async function initialize() {
       showOnly(deniedElement);
       return;
     }
+
+    state.courseAdmin = createCoursesAdmin({
+      supabase,
+      context: state.context,
+      session: state.session,
+      canAny,
+      escapeHtml,
+      onChanged: refreshCounts
+    });
 
     await loadCounts();
     renderIdentity();
