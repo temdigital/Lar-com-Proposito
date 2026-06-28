@@ -49,9 +49,12 @@ begin
     raise exception 'Você não pode suspender ou remover o próprio acesso.';
   end if;
 
-  select coalesce(array_agg(distinct lower(trim(code))) filter (where trim(code) <> ''), array[]::text[])
+  select coalesce(
+    array_agg(distinct lower(trim(requested.code))) filter (where trim(requested.code) <> ''),
+    array[]::text[]
+  )
     into v_role_codes
-  from unnest(coalesce(p_role_codes, array[]::text[])) as code;
+  from unnest(coalesce(p_role_codes, array[]::text[])) as requested(code);
 
   if p_status <> 'removed' and not ('membro' = any(v_role_codes)) then
     v_role_codes := array_append(v_role_codes, 'membro');
@@ -428,7 +431,6 @@ begin
   end if;
 
   if v_invitation.expires_at <= now() then
-    update public.invitations set status = 'expired', updated_at = now() where id = v_invitation.id;
     raise exception 'Este convite expirou.';
   end if;
 
