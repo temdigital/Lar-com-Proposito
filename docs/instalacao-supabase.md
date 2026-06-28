@@ -30,7 +30,8 @@ O arquivo `015_verify_contact.sql` é somente leitura e deve confirmar:
 - `table_exists = true`;
 - `policy_count = 3`;
 - `anon_can_insert = true`;
-- `staff_privileges_available = true`.
+- `authenticated_can_select = true`;
+- `authenticated_can_update = true`.
 
 ## Interrupção obrigatória em caso de erro
 
