@@ -28,6 +28,8 @@ Depois da fundação, execute novos arquivos em ordem numérica:
 6. `supabase/migrations/019_verify_member_context_lock.sql`
 7. `supabase/migrations/020_people_access.sql`
 8. `supabase/migrations/021_verify_people_access.sql`
+9. `supabase/migrations/022_lock_people_access.sql`
+10. `supabase/migrations/023_verify_people_access_lock.sql`
 
 O arquivo `014_contact_messages.sql` cria o canal público de contato com inserção anônima controlada e leitura restrita à equipe com a permissão `support.manage`.
 
@@ -62,19 +64,21 @@ O arquivo `020_people_access.sql` cria as operações protegidas do módulo Pess
 - aceite autenticado com conferência do e-mail;
 - registro das operações em `audit_logs`.
 
-O arquivo `021_verify_people_access.sql` é somente leitura e deve retornar todos os campos como `true`, inclusive:
+O arquivo `021_verify_people_access.sql` faz a primeira conferência. Caso `anonymous_cannot_update_member` ou `anonymous_cannot_create_invitation` retorne `false`, execute obrigatoriamente os arquivos `022` e `023`.
 
-- `update_member_function`;
-- `create_invitation_function`;
-- `revoke_invitation_function`;
-- `invitation_preview_function`;
-- `accept_invitation_function`;
+O arquivo `022_lock_people_access.sql` revoga explicitamente de `PUBLIC` e `anon` a execução das funções administrativas e concede novamente apenas ao papel `authenticated`. A função pública de prévia do convite permanece acessível ao visitante, pois ela somente valida o token e retorna dados limitados do convite.
+
+O arquivo `023_verify_people_access_lock.sql` deve retornar todos os campos como `true`, inclusive:
+
 - `authenticated_can_update_member`;
 - `authenticated_can_create_invitation`;
+- `authenticated_can_revoke_invitation`;
+- `authenticated_can_accept_invitation`;
 - `anonymous_cannot_update_member`;
 - `anonymous_cannot_create_invitation`;
-- `anonymous_can_preview_invitation`;
-- `authenticated_can_accept_invitation`.
+- `anonymous_cannot_revoke_invitation`;
+- `anonymous_cannot_accept_invitation`;
+- `anonymous_can_preview_invitation`.
 
 ## Primeira administradora
 
