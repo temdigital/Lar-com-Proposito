@@ -10,7 +10,7 @@ declare
   v_email text := lower(trim('ADMIN_EMAIL_AQUI'));
   v_user_id uuid;
   v_member_id uuid;
-  v_admin_role_id uuid;
+  v_roles_found integer;
   v_organization_id constant uuid := '11111111-1111-4111-8111-111111111111';
 begin
   if v_email = 'admin_email_aqui' or position('@' in v_email) < 2 then
@@ -27,23 +27,26 @@ begin
   end if;
 
   if not exists (
-    select 1 from auth.users u
-    where u.id = v_user_id and u.email_confirmed_at is not null
+    select 1
+    from auth.users u
+    where u.id = v_user_id
+      and u.email_confirmed_at is not null
   ) then
     raise exception 'A conta existe, mas o e-mail ainda não foi confirmado.';
   end if;
 
-  select r.id
-    into v_admin_role_id
+  select count(*)
+    into v_roles_found
   from public.roles r
-  where r.code = 'admin';
+  where r.code in ('admin', 'membro');
 
-  if v_admin_role_id is null then
-    raise exception 'O papel admin não foi encontrado. Confira as migrations de seed.';
+  if v_roles_found <> 2 then
+    raise exception 'Os papéis admin e membro precisam existir antes da promoção.';
   end if;
 
   update public.profiles
-  set status = 'active', updated_at = now()
+  set status = 'active',
+      updated_at = now()
   where id = v_user_id;
 
   insert into public.organization_members (
@@ -72,12 +75,14 @@ begin
     organization_member_id,
     role_id,
     assigned_by
-  ) values (
+  )
+  select
     v_organization_id,
     v_member_id,
-    v_admin_role_id,
+    r.id,
     v_user_id
-  )
+  from public.roles r
+  where r.code in ('admin', 'membro')
   on conflict (organization_member_id, role_id) do update
   set revoked_at = null,
       assigned_by = excluded.assigned_by,
@@ -96,13 +101,16 @@ begin
     'first_admin_promoted',
     'organization_member',
     v_member_id::text,
-    jsonb_build_object('email', v_email, 'role', 'admin')
+    jsonb_build_object(
+      'email', v_email,
+      'roles', jsonb_build_array('admin', 'membro')
+    )
   );
 end $$;
 
 commit;
 
--- Conferência final: deve retornar pelo menos os papéis membro e admin.
+-- Conferência final: deve retornar exatamente os papéis admin e membro.
 select
   p.email,
   p.status as profile_status,
@@ -115,4 +123,5 @@ join public.organization_members om on om.profile_id = p.id
 join public.member_roles mr on mr.organization_member_id = om.id and mr.revoked_at is null
 join public.roles r on r.id = mr.role_id
 where lower(p.email) = lower(trim('ADMIN_EMAIL_AQUI'))
+  and r.code in ('admin', 'membro')
 order by r.code;
