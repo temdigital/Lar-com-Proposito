@@ -1,0 +1,1 @@
+Area da membro: dashboard responsivo, cursos, comunidade, conteudos, eventos, assinatura, perfil e acesso administrativo por permissao.
