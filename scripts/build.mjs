@@ -3,7 +3,7 @@ import { extname, join } from 'node:path';
 
 const root = process.cwd();
 const output = join(root, 'dist');
-const staticDirectories = ['app', 'auth', 'public', 'src', '.well-known'];
+const staticDirectories = ['app', 'admin', 'auth', 'public', 'src', '.well-known'];
 const rootExtensions = new Set(['.html', '.xml', '.txt', '.webmanifest']);
 const publicPages = new Map([
   ['index.html', 'home'],
@@ -107,4 +107,4 @@ for (const [fileName, current] of publicPages) {
   await writeFile(filePath, html, 'utf8');
 }
 
-console.log('Build concluído com navegação pública padronizada e prioridade mobile.');
+console.log('Build concluído com áreas pública, membro e administrativa.');
