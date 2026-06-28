@@ -1,0 +1,5 @@
+Contact: https://lar-com-proposito.vercel.app/fale-conosco.html
+Expires: 2027-06-27T23:59:59Z
+Preferred-Languages: pt-BR, en
+Canonical: https://lar-com-proposito.vercel.app/.well-known/security.txt
+Policy: https://lar-com-proposito.vercel.app/seguranca.html
