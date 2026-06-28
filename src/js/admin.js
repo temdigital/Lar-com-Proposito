@@ -1,5 +1,6 @@
 import { getSupabaseClient } from './supabase.js';
 import { createCoursesAdmin } from './admin-courses.js';
+import { createPeopleAdmin } from './admin-people.js';
 
 const supabase = getSupabaseClient();
 const loadingElement = document.querySelector('[data-admin-loading]');
@@ -24,7 +25,7 @@ const moduleDefinitions = [
 
 const moduleMap = new Map(moduleDefinitions.map((module) => [module.id, module]));
 const adminPermissionSet = new Set(moduleDefinitions.flatMap((module) => module.permissions));
-const state = { session: null, context: null, permissions: new Set(), counts: {}, courseAdmin: null };
+const state = { session: null, context: null, permissions: new Set(), counts: {}, courseAdmin: null, peopleAdmin: null };
 
 function escapeHtml(value = '') {
   return String(value)
@@ -176,7 +177,7 @@ function renderModules() {
   const container = document.querySelector('[data-admin-modules]');
   container.innerHTML = moduleDefinitions.map((module) => {
     const allowed = canAny(module.permissions);
-    const active = module.id === 'cursos';
+    const active = ['cursos', 'pessoas'].includes(module.id);
     return `<article class="admin-module-card${allowed ? '' : ' is-disabled'}">
       <span class="status-pill">${allowed ? (active ? 'Disponível agora' : 'Acesso liberado') : 'Sem permissão'}</span>
       <div><h3>${escapeHtml(module.title)}</h3><p>${escapeHtml(module.description)}</p></div>
@@ -202,7 +203,6 @@ function renderPermissions() {
 
 function placeholderContent(section) {
   const definitions = {
-    pessoas: ['Pessoas e acessos', 'Este módulo reunirá membros, equipe, convites, papéis e permissões.'],
     comunidade: ['Comunidade', 'Este módulo reunirá espaços, publicações, denúncias e ações de moderação.'],
     conteudo: ['Conteúdo', 'Este módulo reunirá categorias, publicações, mídia e conteúdos exclusivos.'],
     eventos: ['Eventos', 'Este módulo reunirá encontros, inscrições, capacidade e presença.'],
@@ -215,6 +215,10 @@ function placeholderContent(section) {
 function prepareSection(section, element) {
   if (section === 'cursos') {
     state.courseAdmin?.mount(element);
+    return;
+  }
+  if (section === 'pessoas') {
+    state.peopleAdmin?.mount(element);
     return;
   }
   if (section !== 'visao-geral' && !element.innerHTML.trim()) {
@@ -271,6 +275,15 @@ async function initialize() {
     }
 
     state.courseAdmin = createCoursesAdmin({
+      supabase,
+      context: state.context,
+      session: state.session,
+      canAny,
+      escapeHtml,
+      onChanged: refreshCounts
+    });
+
+    state.peopleAdmin = createPeopleAdmin({
       supabase,
       context: state.context,
       session: state.session,
