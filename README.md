@@ -29,6 +29,10 @@ Endereço oficial nesta fase:
 - gestão de pessoas com consulta, filtros, situação do vínculo, função e papéis organizacionais;
 - convites com token criptográfico armazenado somente como hash, revogação e aceite autenticado;
 - proteção contra autossuspensão, autorremoção do papel administrativo e remoção da última administradora;
+- gestão administrativa da comunidade com espaços, acesso por membro, curso, plano ou convite;
+- fila de denúncias com ocultação, remoção, restauração, advertência, suspensão, banimento e descarte;
+- feed da membro com publicações, comentários, reações e denúncias;
+- bloqueio de novas publicações e comentários durante suspensão ativa;
 - páginas Sobre, Fale conosco, Termos, Privacidade e Cookies;
 - formulário público de contato protegido por RLS;
 - robots.txt, sitemap.xml, security.txt e página 404;
@@ -48,6 +52,14 @@ Migrations posteriores:
 6. `019_verify_member_context_lock.sql`
 7. `020_people_access.sql`
 8. `021_verify_people_access.sql`
+9. `022_lock_people_access.sql`
+10. `023_verify_people_access_lock.sql`
+11. `024_community_management.sql`
+12. `025_verify_community_management.sql`
+13. `026_community_admin_visibility.sql`
+14. `027_verify_community_admin_visibility.sql`
+15. `028_community_member_feed.sql`
+16. `029_verify_community_member_feed.sql`
 
 A primeira administradora foi promovida com os papéis `admin` e `membro`. O procedimento auditável permanece documentado em `supabase/manual/promote_first_admin.sql`.
 
