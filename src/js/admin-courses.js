@@ -1,3 +1,5 @@
+import { createCurriculumAdmin } from './admin-curriculum.js';
+
 const STATUS_LABELS = { draft: 'Rascunho', review: 'Em revisão', published: 'Publicado', archived: 'Arquivado' };
 const ACCESS_LABELS = { free: 'Gratuito', paid: 'Compra avulsa', subscription: 'Assinatura', invite: 'Convite' };
 
@@ -11,9 +13,10 @@ function money(value) {
 
 export function createCoursesAdmin({ supabase, context, session, canAny, escapeHtml, onChanged }) {
   const state = { container: null, courses: [], selected: null, slugTouched: false, mounted: false };
-  const organizationId = context.organization?.id;
+  const organizationId = context.organization?.id || context.membership?.organization_id;
   const canManage = () => canAny(['courses.manage']);
   const canEdit = () => canManage() || canAny(['courses.edit_assigned']);
+  const curriculum = createCurriculumAdmin({ supabase, canEdit, escapeHtml });
 
   function feedback(message, type = 'success') {
     const element = state.container?.querySelector('[data-course-feedback]');
@@ -29,7 +32,7 @@ export function createCoursesAdmin({ supabase, context, session, canAny, escapeH
   function shell() {
     return `<div class="course-admin">
       <header class="course-admin-header">
-        <div><p class="admin-eyebrow">Formação</p><h1>Cursos</h1><p>Cadastre formações, defina o acesso e prepare a estrutura para módulos e aulas.</p></div>
+        <div><p class="admin-eyebrow">Formação</p><h1>Cursos</h1><p>Cadastre formações, defina o acesso e organize módulos e aulas.</p></div>
         ${canManage() ? '<button class="button" type="button" data-course-new>Novo curso</button>' : ''}
       </header>
       <section class="course-toolbar">
@@ -70,7 +73,8 @@ export function createCoursesAdmin({ supabase, context, session, canAny, escapeH
       ${course?.id ? `<div class="course-summary-grid"><article><strong data-course-module-count>—</strong><span>Módulos</span></article><article><strong data-course-lesson-count>—</strong><span>Aulas</span></article><article><strong data-course-enrollment-count>—</strong><span>Matrículas</span></article></div>` : ''}
       <p class="course-feedback" data-course-feedback role="status" aria-live="polite"></p>
       ${editable ? `<div class="course-form-actions"><button class="button" type="submit" data-course-save>${isNew ? 'Criar curso' : 'Salvar alterações'}</button>${isNew ? '<button class="button button-secondary" type="button" data-course-cancel>Cancelar</button>' : ''}</div>` : ''}
-    </form>`;
+    </form>
+    ${course?.id ? '<div data-curriculum-root></div>' : ''}`;
   }
 
   function filteredCourses() {
@@ -105,12 +109,12 @@ export function createCoursesAdmin({ supabase, context, session, canAny, escapeH
   }
 
   async function loadSummary(courseId) {
-    const [modules, lessons, enrollments] = await Promise.all([
+    const [modules, moduleRows, enrollments] = await Promise.all([
       supabase.from('course_modules').select('*', { count: 'exact', head: true }).eq('course_id', courseId).neq('status', 'archived'),
       supabase.from('course_modules').select('id').eq('course_id', courseId).neq('status', 'archived'),
       supabase.from('enrollments').select('*', { count: 'exact', head: true }).eq('course_id', courseId)
     ]);
-    const moduleIds = (lessons.data || []).map((item) => item.id);
+    const moduleIds = (moduleRows.data || []).map((item) => item.id);
     let lessonCount = 0;
     if (moduleIds.length) {
       const response = await supabase.from('lessons').select('*', { count: 'exact', head: true }).in('course_module_id', moduleIds).neq('status', 'archived');
@@ -136,7 +140,10 @@ export function createCoursesAdmin({ supabase, context, session, canAny, escapeH
     form?.addEventListener('submit', saveCourse);
     editor.querySelector('[data-course-cancel]')?.addEventListener('click', () => { state.selected = null; renderList(); renderEditor(); });
     editor.querySelector('[data-course-archive]')?.addEventListener('click', archiveCourse);
-    if (course?.id) loadSummary(course.id).catch(console.warn);
+    if (course?.id) {
+      loadSummary(course.id).catch(console.warn);
+      curriculum.mount(editor.querySelector('[data-curriculum-root]'), course);
+    }
   }
 
   function renderEditor(course = null) {
@@ -199,7 +206,7 @@ export function createCoursesAdmin({ supabase, context, session, canAny, escapeH
       state.selected = response.data;
       await loadCourses();
       renderEditor(state.selected);
-      feedback(id ? 'Curso atualizado com sucesso.' : 'Curso criado. A estrutura de módulos e aulas será liberada na próxima etapa.', 'success');
+      feedback(id ? 'Curso atualizado com sucesso.' : 'Curso criado. Agora adicione os módulos e as aulas.', 'success');
       await onChanged?.();
     } catch (error) {
       console.error(error);
