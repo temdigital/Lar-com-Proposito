@@ -25,6 +25,7 @@ jobs:
         run: |
           node --check src/js/admin.js
           node --check src/js/admin-courses.js
+          node --check src/js/admin-curriculum.js
           node --check src/js/member.js
 
       - name: Build static site
@@ -41,9 +42,11 @@ jobs:
           test -f dist/src/js/member.js
           test -f dist/src/js/admin.js
           test -f dist/src/js/admin-courses.js
+          test -f dist/src/js/admin-curriculum.js
           test -f dist/src/styles/app.css
           test -f dist/src/styles/admin.css
           test -f dist/src/styles/admin-courses.css
+          test -f dist/src/styles/admin-course-metrics.css
           test -f dist/.well-known/security.txt
           test -f dist/sitemap.xml
           test -f dist/src/styles/public-navigation.css
