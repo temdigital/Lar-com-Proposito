@@ -51,6 +51,7 @@ jobs:
           test -f dist/privacidade.html
           test -f dist/aceite-convite.html
           test -f dist/app/index.html
+          test -f dist/app/eventos.html
           test -f dist/admin/index.html
           test -f dist/src/js/member.js
           test -f dist/src/js/member-community.js
