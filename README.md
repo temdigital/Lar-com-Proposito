@@ -15,34 +15,49 @@ Endereço oficial nesta fase:
 
 `https://lar-com-proposito.vercel.app`
 
+## Identidade visual oficial
+
+A identidade consolidada do projeto usa:
+
+- símbolo de dois arcos orgânicos com ponto terracota;
+- assinatura “Lar com Propósito” em Parisienne;
+- subtítulo “Mulheres que edificam com amor” em Inter;
+- títulos editoriais em Georgia;
+- paleta Altar Doméstico: Creme Eucaristia, Dourado Sacro, Terracota Tijolo, Verde Esperança e Vinho Profundo.
+
+A identidade aplicada ao site deve ser preservada sem reinterpretação.
+
 ## Recursos implementados
 
 - página institucional responsiva;
 - navegação pública padronizada com prioridade mobile;
-- logotipo tipográfico cursivo com conceito visual Altar Doméstico;
 - cadastro, confirmação de e-mail, login e recuperação de senha;
-- dashboard mobile-first da membro com cursos, comunidade, conteúdos, eventos, assinatura e perfil;
+- dashboard mobile-first da membro;
 - painel administrativo protegido por papéis e permissões;
-- indicadores administrativos condicionados ao acesso autorizado;
-- gestão de cursos com criação, edição, filtros, preços, formas de acesso, certificados e arquivamento;
-- gestão do conteúdo programático com módulos, liberação gradual, videoaulas, textos, prévias e arquivamento;
-- gestão de pessoas com consulta, filtros, situação do vínculo, função e papéis organizacionais;
-- convites com token criptográfico armazenado somente como hash, revogação e aceite autenticado;
-- proteção contra autossuspensão, autorremoção do papel administrativo e remoção da última administradora;
-- gestão administrativa da comunidade com espaços, acesso por membro, curso, plano ou convite;
-- fila de denúncias com ocultação, remoção, restauração, advertência, suspensão, banimento e descarte;
-- feed da membro com publicações, comentários, reações e denúncias;
-- bloqueio de novas publicações e comentários durante suspensão ativa;
+- gestão de cursos, módulos, aulas, matrículas e certificados;
+- gestão de pessoas, convites, papéis e permissões;
+- proteção da última administradora e bloqueio de alterações críticas indevidas;
+- gestão administrativa da comunidade;
+- denúncias, moderação, suspensões, reações e feed seguro;
+- gestão editorial com categorias, rascunho, revisão, publicação, arquivamento e SEO;
+- leitura de conteúdos e favoritos na área da membro;
+- gestão de eventos, inscrições, capacidade, lista de espera e detalhes privados;
+- feed protegido de eventos para membros;
+- central administrativa de atendimento;
+- chamados com protocolo, histórico, notas internas e notificações;
+- mensagens do formulário público organizadas em fila;
+- solicitações de privacidade com protocolo, análise e decisão;
+- área da membro para abertura e acompanhamento de chamados e pedidos LGPD;
 - páginas Sobre, Fale conosco, Termos, Privacidade e Cookies;
 - formulário público de contato protegido por RLS;
 - robots.txt, sitemap.xml, security.txt e página 404;
-- banco multi-organização com cursos, comunidade, assinaturas, conteúdo, suporte e auditoria.
+- banco multi-organização com auditoria.
 
 ## Banco de dados
 
 A fundação foi instalada até `013_verify_installation.sql`.
 
-Migrations posteriores:
+Migrations posteriores, em ordem:
 
 1. `014_contact_messages.sql`
 2. `015_verify_contact.sql`
@@ -60,6 +75,15 @@ Migrations posteriores:
 14. `027_verify_community_admin_visibility.sql`
 15. `028_community_member_feed.sql`
 16. `029_verify_community_member_feed.sql`
+17. `030_content_management.sql`
+18. `031_verify_content_management.sql`
+19. `032_events_management.sql`
+20. `033_verify_events_management.sql`
+21. `034_event_private_access.sql`
+22. `035_member_events_feed.sql`
+23. `036_verify_member_events_feed.sql`
+24. `037_support_center.sql`
+25. `038_verify_support_center.sql`
 
 A primeira administradora foi promovida com os papéis `admin` e `membro`. O procedimento auditável permanece documentado em `supabase/manual/promote_first_admin.sql`.
 
