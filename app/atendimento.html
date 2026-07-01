@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#F9F6F0">
+  <title>Atendimento | Lar com Propósito</title>
+  <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/src/styles/tokens.css">
+  <link rel="stylesheet" href="/src/styles/global.css">
+  <link rel="stylesheet" href="/src/styles/member-support.css">
+  <script type="module" src="/src/js/member-support.js"></script>
+</head>
+<body class="member-support-page">
+  <a class="skip-link" href="#support-content">Ir para o conteúdo</a>
+  <div class="member-support-shell">
+    <header class="member-support-topbar">
+      <a class="member-support-brand" href="/app/">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M13 39C13 23 22 13 32 10c10 3 19 13 19 29"/><path d="M19 39c4-7 8-10 13-10s9 3 13 10"/><circle cx="32" cy="43" r="4"/></svg></span>
+        <strong>Lar com Propósito</strong>
+      </a>
+      <a class="button button-secondary button-small" href="/app/">Voltar</a>
+    </header>
+
+    <main id="support-content">
+      <section class="member-support-loading" data-support-loading>
+        <div class="loading-mark" aria-hidden="true"></div>
+        <h1>Carregando atendimento…</h1>
+        <p>Consultando seus chamados e solicitações.</p>
+      </section>
+
+      <section data-support-error hidden>
+        <div class="member-support-empty"><strong>Não foi possível carregar o atendimento</strong><p data-support-error-message>Tente novamente.</p></div>
+      </section>
+
+      <div data-support-content hidden>
+        <section class="member-support-hero">
+          <p class="app-eyebrow">Cuidado e acompanhamento</p>
+          <h1>Como podemos ajudar?</h1>
+          <p>Abra um chamado, acompanhe respostas e registre solicitações relacionadas aos seus dados pessoais.</p>
+        </section>
+
+        <nav class="member-support-tabs" aria-label="Atendimento">
+          <button class="member-support-tab is-active" type="button" data-member-support-tab="tickets">Meus chamados</button>
+          <button class="member-support-tab" type="button" data-member-support-tab="privacy">Privacidade</button>
+        </nav>
+
+        <section class="member-support-panel" data-member-support-view="tickets">
+          <div class="member-support-panel-head"><div><h2>Chamados</h2><p>Acompanhe o histórico completo de atendimento.</p></div><button class="button button-small" type="button" data-new-ticket>Novo chamado</button></div>
+          <div class="member-support-list" data-ticket-list></div>
+        </section>
+
+        <section class="member-support-panel" data-member-support-view="privacy" hidden>
+          <div class="member-support-panel-head"><div><h2>Solicitações de privacidade</h2><p>Acesso, correção, exclusão, portabilidade e consentimento.</p></div><button class="button button-small" type="button" data-new-privacy>Nova solicitação</button></div>
+          <div class="member-support-list" data-privacy-list></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <dialog class="member-support-dialog" data-ticket-create-dialog>
+    <form data-ticket-create-form>
+      <div class="member-support-dialog-head"><div><h2>Novo chamado</h2><p>Descreva a situação com clareza.</p></div><button class="dialog-close" type="button" data-close-dialog>×</button></div>
+      <div class="member-support-dialog-body"><div class="member-support-grid"><div class="field is-full"><label for="ticket-subject">Assunto</label><input id="ticket-subject" name="subject" type="text" minlength="4" maxlength="180" required></div><div class="field"><label for="ticket-category">Categoria</label><select id="ticket-category" name="category"><option value="technical">Problema técnico</option><option value="account">Conta e acesso</option><option value="courses">Cursos</option><option value="community">Comunidade</option><option value="billing">Cobrança</option><option value="events">Eventos</option><option value="privacy">Privacidade</option><option value="other">Outros</option></select></div><div class="field"><label for="ticket-priority">Prioridade</label><select id="ticket-priority" name="priority"><option value="normal">Normal</option><option value="low">Baixa</option><option value="high">Alta</option></select></div><div class="field is-full"><label for="ticket-message">Mensagem</label><textarea id="ticket-message" name="message" minlength="10" maxlength="4000" required></textarea></div></div><p class="member-support-feedback" data-ticket-create-feedback></p><div class="member-support-dialog-actions"><button class="button" type="submit">Abrir chamado</button><button class="button button-secondary" type="button" data-close-dialog>Cancelar</button></div></div>
+    </form>
+  </dialog>
+
+  <dialog class="member-support-dialog" data-ticket-thread-dialog>
+    <div class="member-support-dialog-head"><div><h2 data-thread-title>Chamado</h2><p data-thread-subtitle></p></div><button class="dialog-close" type="button" data-close-dialog>×</button></div>
+    <div class="member-support-dialog-body"><div class="member-support-thread" data-thread-list></div><form data-ticket-reply-form><div class="field"><label for="ticket-reply">Responder</label><textarea id="ticket-reply" name="body" minlength="2" maxlength="4000" required></textarea></div><p class="member-support-feedback" data-ticket-reply-feedback></p><div class="member-support-dialog-actions"><button class="button" type="submit">Enviar resposta</button><button class="button button-secondary" type="button" data-close-dialog>Fechar</button></div></form></div>
+  </dialog>
+
+  <dialog class="member-support-dialog" data-privacy-dialog>
+    <form data-privacy-form>
+      <div class="member-support-dialog-head"><div><h2>Nova solicitação de privacidade</h2><p>Seu pedido receberá protocolo e histórico de análise.</p></div><button class="dialog-close" type="button" data-close-dialog>×</button></div>
+      <div class="member-support-dialog-body"><div class="member-support-grid"><div class="field"><label for="privacy-type">Tipo de solicitação</label><select id="privacy-type" name="request_type"><option value="access">Acesso aos dados</option><option value="correction">Correção</option><option value="deletion">Exclusão</option><option value="anonymization">Anonimização</option><option value="portability">Portabilidade</option><option value="consent_revocation">Revogação de consentimento</option></select></div><div class="field"><label for="privacy-whatsapp">WhatsApp</label><input id="privacy-whatsapp" name="whatsapp" type="tel" maxlength="30"></div><div class="field is-full"><label for="privacy-description">Descrição</label><textarea id="privacy-description" name="description" minlength="10" maxlength="3000" required></textarea></div></div><p class="member-support-feedback" data-privacy-feedback></p><div class="member-support-dialog-actions"><button class="button" type="submit">Registrar solicitação</button><button class="button button-secondary" type="button" data-close-dialog>Cancelar</button></div></div>
+    </form>
+  </dialog>
+</body>
+</html>
