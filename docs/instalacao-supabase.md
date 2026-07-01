@@ -1,116 +1,102 @@
-# Instalação inicial do Supabase
+# Instalação e evolução do Supabase
 
-## Situação auditada
+## Fundação instalada
 
-Na auditoria de 27/06/2026, o schema `public` estava vazio, o Auth não possuía usuários e nenhum bucket da aplicação estava criado.
+A fundação do projeto foi executada e validada pelos arquivos de `002_base.sql` até `013_verify_installation.sql`.
 
-## Fundação já instalada
-
-Os arquivos de `002_base.sql` até `013_verify_installation.sql` foram executados e validados com sucesso. O ambiente retornou:
-
-- 47 tabelas públicas;
-- 99 policies RLS;
-- 6 buckets;
-- 30 permissões;
-- 5 papéis oficiais;
-- 2 triggers do Auth;
-- organização principal criada.
+O ambiente consolidado possui autenticação, perfis, organização, papéis, permissões, cursos, comunidade, conteúdo, eventos, assinaturas, atendimento, armazenamento e auditoria com RLS ativa.
 
 ## Migrations posteriores
 
-Depois da fundação, execute novos arquivos em ordem numérica:
+Execute sempre em ordem numérica:
 
-1. `supabase/migrations/014_contact_messages.sql`
-2. `supabase/migrations/015_verify_contact.sql`
-3. `supabase/migrations/016_member_dashboard.sql`
-4. `supabase/migrations/017_verify_member_dashboard.sql`
-5. `supabase/migrations/018_lock_member_context.sql`
-6. `supabase/migrations/019_verify_member_context_lock.sql`
-7. `supabase/migrations/020_people_access.sql`
-8. `supabase/migrations/021_verify_people_access.sql`
-9. `supabase/migrations/022_lock_people_access.sql`
-10. `supabase/migrations/023_verify_people_access_lock.sql`
-11. `supabase/migrations/024_community_management.sql`
-12. `supabase/migrations/025_verify_community_management.sql`
-13. `supabase/migrations/026_community_admin_visibility.sql`
-14. `supabase/migrations/027_verify_community_admin_visibility.sql`
-15. `supabase/migrations/028_community_member_feed.sql`
-16. `supabase/migrations/029_verify_community_member_feed.sql`
+1. `014_contact_messages.sql`
+2. `015_verify_contact.sql`
+3. `016_member_dashboard.sql`
+4. `017_verify_member_dashboard.sql`
+5. `018_lock_member_context.sql`
+6. `019_verify_member_context_lock.sql`
+7. `020_people_access.sql`
+8. `021_verify_people_access.sql`
+9. `022_lock_people_access.sql`
+10. `023_verify_people_access_lock.sql`
+11. `024_community_management.sql`
+12. `025_verify_community_management.sql`
+13. `026_community_admin_visibility.sql`
+14. `027_verify_community_admin_visibility.sql`
+15. `028_community_member_feed.sql`
+16. `029_verify_community_member_feed.sql`
+17. `030_content_management.sql`
+18. `031_verify_content_management.sql`
+19. `032_events_management.sql`
+20. `033_verify_events_management.sql`
+21. `034_event_private_access.sql`
+22. `035_member_events_feed.sql`
+23. `036_verify_member_events_feed.sql`
+24. `037_support_center.sql`
+25. `038_verify_support_center.sql`
 
-O arquivo `014_contact_messages.sql` cria o canal público de contato com inserção anônima controlada e leitura restrita à equipe com a permissão `support.manage`.
+## Pessoas e acessos
 
-O arquivo `015_verify_contact.sql` é somente leitura e deve confirmar `table_exists`, `anon_can_insert`, `authenticated_can_select` e `authenticated_can_update` como `true`.
-
-O arquivo `016_member_dashboard.sql` cria a função segura `get_my_app_context()`. Ela fornece somente os dados da pessoa autenticada, seu vínculo, papéis, permissões e contadores necessários para a área da membro e o painel administrativo.
-
-O arquivo `017_verify_member_dashboard.sql` verifica a função inicial. Caso `anonymous_cannot_execute` retorne `false`, execute obrigatoriamente os arquivos `018` e `019`.
-
-O arquivo `018_lock_member_context.sql` remove explicitamente a permissão de execução dos papéis `PUBLIC` e `anon` e mantém a execução somente para `authenticated`.
-
-O arquivo `019_verify_member_context_lock.sql` deve retornar todos os campos como `true`, incluindo `anonymous_cannot_execute`.
-
-O arquivo `020_people_access.sql` cria atualização de membros e papéis, convites, aceite autenticado, proteção da última administradora e auditoria.
-
-O arquivo `021_verify_people_access.sql` faz a primeira conferência. Caso permissões anônimas indevidas sejam encontradas, execute os arquivos `022` e `023`.
-
-O arquivo `022_lock_people_access.sql` revoga de `PUBLIC` e `anon` as funções administrativas e concede novamente somente ao papel `authenticated`.
-
-O arquivo `023_verify_people_access_lock.sql` foi validado com todos os 14 campos retornando `true` em 28/06/2026.
+Os arquivos `020` a `023` criam e protegem convites, papéis, atualização de membros e aceite autenticado. O arquivo `023` deve retornar todos os campos como `true`.
 
 ## Comunidade
 
-O arquivo `024_community_management.sql` cria:
+Os arquivos `024` a `029` implementam espaços, feed seguro, reações, denúncias, moderação, suspensão e visibilidade administrativa. Os verificadores devem retornar todos os campos como `true`.
 
-- moderação auditável de publicação, comentário ou perfil;
-- ocultação, remoção e restauração de conteúdo;
-- advertência, silêncio temporário, suspensão e banimento;
-- resolução ou descarte de denúncia;
-- reação segura com alternância de estado;
-- bloqueio explícito de execução anônima das funções protegidas.
+## Conteúdo
 
-O arquivo `025_verify_community_management.sql` deve retornar todos os campos como `true`.
+Os arquivos `030` e `031` implementam categorias, editor, rascunho, revisão, publicação, arquivamento, destaque e SEO. O arquivo `031` deve retornar todos os campos como `true`.
 
-O arquivo `026_community_admin_visibility.sql` ajusta as policies de leitura para que administradoras e moderadoras possam visualizar rascunhos, conteúdo oculto e conteúdo denunciado, sem ampliar o acesso público.
+## Eventos
 
-O arquivo `027_verify_community_admin_visibility.sql` deve retornar:
+Os arquivos `032` e `033` implementam eventos e inscrições.
 
-- `community_spaces_read_policy_ok = true`;
-- `community_posts_read_policy_ok = true`;
-- `community_comments_read_policy_ok = true`.
+O arquivo `034` separa links e instruções privadas da tabela pública. O arquivo `035` cria o feed autenticado e o `036` verifica a proteção. Todos os campos do `036` devem retornar `true`.
 
-O arquivo `028_community_member_feed.sql` cria o feed seguro da comunidade com dados públicos limitados das autoras, comentários, contagens de reações e reações da pessoa conectada. Também impede novas publicações e comentários durante suspensão comunitária ativa.
+## Atendimento e privacidade
 
-O arquivo `029_verify_community_member_feed.sql` deve retornar todos os campos como `true`, incluindo bloqueio anônimo das funções e presença das policies de inserção.
+O arquivo `037_support_center.sql` implementa:
+
+- chamados com protocolo automático;
+- respostas da membro e da equipe;
+- notas internas invisíveis para a titular;
+- situação, prioridade e responsável;
+- fila das mensagens públicas;
+- solicitações de privacidade com protocolo;
+- análise e decisão auditáveis;
+- notificações internas após resposta da equipe;
+- bloqueio de escrita direta nas tabelas sensíveis;
+- funções executáveis somente por pessoa autenticada.
+
+O arquivo `038_verify_support_center.sql` deve retornar todos os campos como `true`, incluindo existência das funções, bloqueio anônimo, bloqueio de escrita direta e proteção das notas internas.
 
 ## Primeira administradora
 
-A primeira administradora foi promovida com sucesso para a conta `cafedeeducadoras@gmail.com`, com os papéis `admin` e `membro`.
+A conta `cafedeeducadoras@gmail.com` foi promovida com os papéis `admin` e `membro`.
 
-O procedimento auditável permanece disponível em `supabase/manual/promote_first_admin.sql` para recuperação controlada ou instalação em outro ambiente.
+O procedimento auditável permanece em `supabase/manual/promote_first_admin.sql`.
 
-## Interrupção obrigatória em caso de erro
+## Regra de interrupção
 
-Se qualquer arquivo retornar erro:
+Se qualquer migration retornar erro:
 
 1. não execute o arquivo seguinte;
-2. copie a mensagem completa do erro;
-3. registre qual arquivo estava sendo executado;
-4. envie a mensagem para análise antes de tentar uma correção manual.
+2. copie a mensagem completa;
+3. registre o nome do arquivo;
+4. envie o erro para análise antes de fazer correções manuais.
 
-Não desative RLS e não remova constraints para contornar erros.
+Não desative RLS, não remova constraints e não conceda acesso direto para contornar falhas.
 
-## Configurações operacionais
+## Testes operacionais
 
-Depois das migrations:
+Após concluir as migrations:
 
-1. manter as URLs do Supabase Auth alinhadas ao domínio de produção;
-2. manter somente a chave pública no frontend;
-3. nunca expor `service_role`, segredo JWT ou senha do banco;
-4. testar cadastro, confirmação de e-mail, login, logout e recuperação;
-5. testar o formulário público de contato;
-6. testar a área da membro em smartphone e desktop;
-7. validar que pessoas sem permissão não entram em `/admin/`;
-8. criar um convite de teste e concluir o fluxo em `/aceite-convite`;
-9. criar um espaço de comunidade e publicar uma conversa de teste;
-10. testar denúncia, moderação, suspensão e restauração com uma conta secundária;
-11. revisar periodicamente logs, RLS e dependências.
+1. testar cadastro, confirmação, login, logout e recuperação de senha;
+2. testar a área da membro em smartphone e desktop;
+3. validar que pessoas sem permissão não acessam `/admin/`;
+4. testar convite, comunidade, conteúdo e eventos com uma conta secundária;
+5. abrir um chamado como membro e responder pelo painel;
+6. confirmar que uma nota interna não aparece para a titular;
+7. registrar e concluir uma solicitação de privacidade;
+8. revisar periodicamente logs, RLS e dependências.
