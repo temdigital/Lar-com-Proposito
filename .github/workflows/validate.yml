@@ -32,6 +32,8 @@ jobs:
           node --check src/js/admin-content-page.js
           node --check src/js/admin-events.js
           node --check src/js/admin-events-page.js
+          node --check src/js/admin-support.js
+          node --check src/js/admin-support-page.js
           node --check src/js/invite-page.js
           node --check src/js/auth-page.js
           node --check src/js/member.js
@@ -39,6 +41,7 @@ jobs:
           node --check src/js/member-community-page.js
           node --check src/js/member-content-page.js
           node --check src/js/member-events-page.js
+          node --check src/js/member-support.js
 
       - name: Build static site
         run: npm run build
@@ -52,12 +55,14 @@ jobs:
           test -f dist/aceite-convite.html
           test -f dist/app/index.html
           test -f dist/app/eventos.html
+          test -f dist/app/atendimento.html
           test -f dist/admin/index.html
           test -f dist/src/js/member.js
           test -f dist/src/js/member-community.js
           test -f dist/src/js/member-community-page.js
           test -f dist/src/js/member-content-page.js
           test -f dist/src/js/member-events-page.js
+          test -f dist/src/js/member-support.js
           test -f dist/src/js/admin.js
           test -f dist/src/js/admin-courses.js
           test -f dist/src/js/admin-curriculum.js
@@ -67,11 +72,15 @@ jobs:
           test -f dist/src/js/admin-content-page.js
           test -f dist/src/js/admin-events.js
           test -f dist/src/js/admin-events-page.js
+          test -f dist/src/js/admin-support.js
+          test -f dist/src/js/admin-support-page.js
           test -f dist/src/js/invite-page.js
           test -f dist/src/styles/app.css
           test -f dist/src/styles/member-community.css
           test -f dist/src/styles/member-content.css
           test -f dist/src/styles/member-events.css
+          test -f dist/src/styles/member-support.css
+          test -f dist/src/styles/member-support-extra.css
           test -f dist/src/styles/admin.css
           test -f dist/src/styles/admin-courses.css
           test -f dist/src/styles/admin-course-metrics.css
@@ -79,6 +88,7 @@ jobs:
           test -f dist/src/styles/admin-community.css
           test -f dist/src/styles/admin-content.css
           test -f dist/src/styles/admin-events.css
+          test -f dist/src/styles/admin-support.css
           test -f dist/src/styles/invite.css
           test -f dist/.well-known/security.txt
           test -f dist/sitemap.xml
