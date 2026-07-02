@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#F9F6F0">
+  <title>Clube e assinatura | Lar com Propósito</title>
+  <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/src/styles/tokens.css">
+  <link rel="stylesheet" href="/src/styles/global.css">
+  <link rel="stylesheet" href="/src/styles/app.css">
+  <link rel="stylesheet" href="/src/styles/member-club.css">
+  <script type="module" src="/src/js/member-club-page.js"></script>
+</head>
+<body class="member-club-page">
+  <a class="skip-link" href="#club-content">Ir para o conteúdo</a>
+  <div class="member-club-shell">
+    <header class="member-club-topbar">
+      <a class="member-club-brand" href="/app/" aria-label="Minha área — Lar com Propósito">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M13 39C13 23 22 13 32 10c10 3 19 13 19 29"/><path d="M19 39c4-7 8-10 13-10s9 3 13 10"/><circle cx="32" cy="43" r="4"/></svg></span>
+        <strong>Lar com Propósito</strong>
+      </a>
+      <a class="button button-secondary button-small" href="/app/">Voltar</a>
+    </header>
+
+    <main class="member-club-main" id="club-content">
+      <section class="member-club-loading" data-club-loading>
+        <div><div class="loading-mark" aria-hidden="true"></div><h1>Carregando o clube…</h1><p>Consultando os planos informativos e sua situação de acesso.</p></div>
+      </section>
+
+      <section class="member-club-error" data-club-error hidden>
+        <div><h1>Não foi possível carregar o clube.</h1><p data-club-error-message>Tente novamente.</p><div class="member-club-actions"><button class="button" type="button" data-club-retry>Tentar novamente</button><a class="button button-secondary" href="/app/">Voltar à minha área</a></div></div>
+      </section>
+
+      <div class="member-club-content" data-club-content hidden>
+        <section class="member-club-hero">
+          <div><p class="app-eyebrow">Formação, comunidade e presença</p><h1>Clube Lar com Propósito</h1><p>Conheça a proposta dos planos e acompanhe a situação da assinatura associada à sua conta.</p></div>
+        </section>
+
+        <div class="member-club-scope" role="note"><strong>Etapa de homologação:</strong> esta tela é informativa e não permite contratação nesta etapa.</div>
+
+        <section class="member-club-section">
+          <header class="member-club-section-head"><h2>Minha situação</h2><p>O acesso válido é definido pela assinatura e pelo período registrado no sistema.</p></header>
+          <div class="member-club-current" data-current-subscription></div>
+        </section>
+
+        <section class="member-club-section">
+          <header class="member-club-section-head"><h2>Planos informativos</h2><p>Valores e benefícios servem para homologação e apresentação. A liberação comercial ocorrerá somente após os testes completos.</p></header>
+          <div class="member-club-grid" data-plan-list></div>
+          <div class="member-club-actions"><a class="button button-secondary" href="/app/atendimento.html">Falar com o atendimento</a><a class="button button-secondary" href="/app/">Voltar à minha área</a></div>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
