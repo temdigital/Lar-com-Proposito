@@ -35,6 +35,8 @@ Execute sempre em ordem numérica:
 23. `036_verify_member_events_feed.sql`
 24. `037_support_center.sql`
 25. `038_verify_support_center.sql`
+26. `039_club_subscriptions_homologation.sql`
+27. `040_verify_club_subscriptions_homologation.sql`
 
 ## Pessoas e acessos
 
@@ -71,6 +73,22 @@ O arquivo `037_support_center.sql` implementa:
 
 O arquivo `038_verify_support_center.sql` deve retornar todos os campos como `true`, incluindo existência das funções, bloqueio anônimo, bloqueio de escrita direta e proteção das notas internas.
 
+## Clube e assinaturas em homologação
+
+O arquivo `039_club_subscriptions_homologation.sql` implementa, sem ativar cobrança real:
+
+- tabela protegida de regras de acesso por plano;
+- gestão de planos e benefícios por função SQL auditável;
+- associação manual de assinaturas para testes;
+- concessão e revogação de `access_grants` por assinatura;
+- reconciliação de períodos expirados;
+- bloqueio de escrita direta nas tabelas críticas do módulo;
+- execução anônima revogada.
+
+O arquivo `040_verify_club_subscriptions_homologation.sql` deve retornar todos os campos como `true`. Consulte também `docs/modulo-clube-assinaturas.md`.
+
+Esta etapa não implementa checkout, provedor de pagamento, renovação automática, reembolso, chargeback ou webhook financeiro.
+
 ## Primeira administradora
 
 A conta `cafedeeducadoras@gmail.com` foi promovida com os papéis `admin` e `membro`.
@@ -99,4 +117,8 @@ Após concluir as migrations:
 5. abrir um chamado como membro e responder pelo painel;
 6. confirmar que uma nota interna não aparece para a titular;
 7. registrar e concluir uma solicitação de privacidade;
-8. revisar periodicamente logs, RLS e dependências.
+8. criar um plano de homologação com benefícios;
+9. associar uma assinatura manual a uma conta secundária;
+10. confirmar a criação do acesso geral ao clube e dos recursos associados;
+11. pausar ou expirar a assinatura e confirmar a revogação dos acessos;
+12. revisar periodicamente logs, RLS e dependências.
