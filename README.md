@@ -89,12 +89,14 @@ Migrations posteriores, em ordem:
 25. `038_verify_support_center.sql`
 26. `039_club_subscriptions_homologation.sql`
 27. `040_verify_club_subscriptions_homologation.sql`
+28. `041_lock_club_function_privileges.sql`
+29. `042_verify_club_function_privileges.sql`
 
-As migrations até `038` estão confirmadas no ambiente. Execute `039` e, somente após sucesso, `040`. O verificador `040` deve retornar todos os campos como `true`.
+As migrations até `042` estão confirmadas no ambiente. Os verificadores `040` e `042` retornaram todos os campos como `true`. A próxima etapa é a homologação operacional do Clube e Assinaturas com conta secundária, sem cobrança real.
 
 A primeira administradora foi promovida com os papéis `admin` e `membro`. O procedimento auditável permanece documentado em `supabase/manual/promote_first_admin.sql`.
 
-Consulte `docs/instalacao-supabase.md` e `docs/modulo-clube-assinaturas.md` antes de executar novos arquivos.
+Consulte `docs/instalacao-supabase.md`, `docs/modulo-clube-assinaturas.md` e `supabase/manual/verify_club_operational_homologation.sql` antes de avançar para pagamentos.
 
 ## Segurança
 
