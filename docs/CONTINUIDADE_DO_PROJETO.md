@@ -1,6 +1,6 @@
 # Continuidade do projeto Lar com Propósito
 
-Atualizado em 1º de julho de 2026.
+Atualizado em 2 de julho de 2026.
 
 ## Fonte de verdade
 
@@ -38,6 +38,8 @@ A fundação foi instalada até a migration `013`. As evoluções de `014` a `03
 - eventos e inscrições;
 - atendimento e privacidade.
 
+As migrations `039_club_subscriptions_homologation.sql` e `040_verify_club_subscriptions_homologation.sql` foram preparadas no repositório. Elas devem ser executadas, nessa ordem, no Supabase antes da homologação operacional do módulo.
+
 ## Módulos implementados
 
 - Site institucional e páginas legais
@@ -50,6 +52,21 @@ A fundação foi instalada até a migration `013`. As evoluções de `014` a `03
 - Conteúdo, categorias, SEO e favoritos
 - Eventos, inscrições e lista de espera
 - Atendimento, mensagens públicas e solicitações de privacidade
+- Clube e assinaturas em homologação, sem cobrança real
+
+## Clube e assinaturas
+
+A etapa de homologação acrescenta:
+
+- gestão administrativa de planos e benefícios;
+- regras de acesso por plano;
+- associação manual de assinatura;
+- concessão de acesso geral ao clube e a recursos específicos;
+- expiração, pausa, cancelamento e revogação testáveis;
+- visualização informativa de planos na área da membro;
+- auditoria das operações críticas.
+
+Não foram ativados checkout, pagamentos, webhooks, renovação automática, reembolso ou conciliação financeira.
 
 ## Decisões permanentes
 
@@ -74,13 +91,17 @@ O conteúdo da página inicial passou a destacar formação, comunidade e atendi
 
 ## Próxima etapa recomendada
 
-Prosseguir com Clube e Assinaturas em modo de homologação, sem ativar cobrança real:
+Após executar e validar `039` e `040`, realizar homologação ponta a ponta com uma conta secundária:
 
-- gestão administrativa de planos;
-- benefícios por plano;
-- associação manual de assinatura;
-- concessão de acesso por assinatura;
-- testes completos antes de escolher e integrar o provedor de pagamento.
+- cadastrar plano e benefícios;
+- associar assinatura manual;
+- verificar acessos concedidos;
+- testar conteúdo, curso, comunidade e evento vinculados ao plano;
+- pausar, expirar e cancelar;
+- confirmar revogação e auditoria;
+- validar smartphone e desktop.
+
+A seleção de provedor de pagamento permanece posterior a essa homologação funcional.
 
 ## Regra para o próximo chat
 
