@@ -65,6 +65,40 @@ function publicFooter() {
   </footer>`;
 }
 
+function homeCareSection() {
+  return `<section class="section trust-section" id="transparencia">
+      <div class="container">
+        <div class="trust-heading">
+          <div>
+            <p class="eyebrow">Cuidado em cada etapa</p>
+            <h2>Uma plataforma organizada para servir à jornada completa.</h2>
+          </div>
+          <p>Formação, comunidade, conteúdos, eventos e atendimento são desenvolvidos de forma integrada para oferecer uma experiência acolhedora e funcional.</p>
+        </div>
+        <div class="trust-grid">
+          <article class="trust-card">
+            <span class="trust-icon" aria-hidden="true">✓</span>
+            <h3>Formação organizada</h3>
+            <p>Cursos, materiais e progresso reunidos em uma área pessoal simples de acompanhar.</p>
+            <a href="/#jornada">Conhecer a jornada</a>
+          </article>
+          <article class="trust-card">
+            <span class="trust-icon" aria-hidden="true">◌</span>
+            <h3>Comunidade acompanhada</h3>
+            <p>Espaços de troca com regras claras, moderação e cuidado com a convivência.</p>
+            <a href="/#comunidade">Conhecer a comunidade</a>
+          </article>
+          <article class="trust-card">
+            <span class="trust-icon" aria-hidden="true">?</span>
+            <h3>Atendimento próximo</h3>
+            <p>Dúvidas, suporte e solicitações de privacidade podem ser encaminhadas pelos canais do projeto.</p>
+            <a href="/fale-conosco">Fale conosco</a>
+          </article>
+        </div>
+      </div>
+    </section>`;
+}
+
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 
@@ -97,12 +131,65 @@ for (const [fileName, current] of publicPages) {
     /<footer class="site-footer">[\s\S]*?<\/footer>/,
     publicFooter()
   );
+
+  if (fileName === 'index.html') {
+    html = html.replace(
+      /<section class="section trust-section" id="transparencia">[\s\S]*?<\/section>/,
+      homeCareSection()
+    );
+  }
+
+  if (fileName === 'sobre.html') {
+    html = html.replace(
+      /<div class="notice"><strong>Transparência:<\/strong>[\s\S]*?<\/div>/,
+      '<div class="notice"><strong>Compromisso:</strong> o desenvolvimento avança por etapas, com revisão de conteúdo, usabilidade, privacidade e funcionamento antes de cada liberação.</div>'
+    );
+  }
+
   html = html
     .replaceAll('/seguranca.html', '/#transparencia')
     .replaceAll('/seguranca', '/#transparencia')
     .replaceAll('Ver orientações de segurança', 'Conhecer o projeto');
 
   await writeFile(filePath, html, 'utf8');
+}
+
+const authScriptPath = join(output, 'src', 'js', 'auth-page.js');
+let authScript = await readFile(authScriptPath, 'utf8');
+authScript = authScript
+  .replace(/function insertOfficialAddressNote\(\) \{[\s\S]*?\n\}/, '')
+  .replace(/\ninsertOfficialAddressNote\(\);/, '');
+await writeFile(authScriptPath, authScript, 'utf8');
+
+const globalStylePath = join(output, 'src', 'styles', 'global.css');
+let globalStyle = await readFile(globalStylePath, 'utf8');
+globalStyle = globalStyle
+  .replace(/\.official-address \{[\s\S]*?\n\}/, '')
+  .replace(/\.official-address::before \{[\s\S]*?\n\}/, '');
+await writeFile(globalStylePath, globalStyle, 'utf8');
+
+const authStylePath = join(output, 'src', 'styles', 'auth.css');
+let authStyle = await readFile(authStylePath, 'utf8');
+authStyle = authStyle.replace(/\.auth-security-note\{[\s\S]*?\}(?=\.auth-form)/, '');
+await writeFile(authStylePath, authStyle, 'utf8');
+
+const forbiddenVisiblePhrases = [
+  'Endereço oficial nesta fase',
+  'Conexão protegida por HTTPS.',
+  'class="official-address"',
+  'insertOfficialAddressNote()'
+];
+
+for (const relativePath of [
+  'index.html', 'sobre.html', 'fale-conosco.html', 'termos.html',
+  'privacidade.html', 'cookies.html', 'src/js/auth-page.js'
+]) {
+  const content = await readFile(join(output, relativePath), 'utf8');
+  for (const phrase of forbiddenVisiblePhrases) {
+    if (content.includes(phrase)) {
+      throw new Error(`Conteúdo visual obsoleto encontrado em ${relativePath}: ${phrase}`);
+    }
+  }
 }
 
 console.log('Build concluído com áreas pública, membro e administrativa.');
