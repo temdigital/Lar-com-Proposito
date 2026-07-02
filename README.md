@@ -48,6 +48,9 @@ A identidade aplicada ao site deve ser preservada sem reinterpretação.
 - mensagens do formulário público organizadas em fila;
 - solicitações de privacidade com protocolo, análise e decisão;
 - área da membro para abertura e acompanhamento de chamados e pedidos LGPD;
+- clube e assinaturas em modo de homologação, sem cobrança real;
+- gestão de planos, benefícios, associações manuais e acessos por assinatura;
+- visualização informativa de planos na área da membro;
 - páginas Sobre, Fale conosco, Termos, Privacidade e Cookies;
 - formulário público de contato protegido por RLS;
 - robots.txt, sitemap.xml, security.txt e página 404;
@@ -84,10 +87,14 @@ Migrations posteriores, em ordem:
 23. `036_verify_member_events_feed.sql`
 24. `037_support_center.sql`
 25. `038_verify_support_center.sql`
+26. `039_club_subscriptions_homologation.sql`
+27. `040_verify_club_subscriptions_homologation.sql`
+
+As migrations até `038` estão confirmadas no ambiente. Execute `039` e, somente após sucesso, `040`. O verificador `040` deve retornar todos os campos como `true`.
 
 A primeira administradora foi promovida com os papéis `admin` e `membro`. O procedimento auditável permanece documentado em `supabase/manual/promote_first_admin.sql`.
 
-Consulte `docs/instalacao-supabase.md` antes de executar novos arquivos.
+Consulte `docs/instalacao-supabase.md` e `docs/modulo-clube-assinaturas.md` antes de executar novos arquivos.
 
 ## Segurança
 
