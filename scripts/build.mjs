@@ -38,7 +38,6 @@ function publicFooter() {
         <div class="footer-brand-block">
           <strong class="footer-wordmark">Lar com Propósito</strong>
           <p>Mulheres que edificam com amor, presença, serviço e beleza no cotidiano.</p>
-          <span class="official-address">lar-com-proposito.vercel.app</span>
         </div>
         <div>
           <strong class="footer-heading">Projeto</strong>
@@ -61,7 +60,6 @@ function publicFooter() {
       </div>
       <div class="footer-bottom">
         <p>© <span data-current-year></span> Lar com Propósito.</p>
-        <p>Conexão protegida por HTTPS.</p>
       </div>
     </div>
   </footer>`;
