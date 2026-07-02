@@ -27,7 +27,7 @@ Não reinterpretar ou substituir a marca sem autorização expressa.
 
 ## Estado do banco
 
-A fundação foi instalada até a migration `013`. As evoluções de `014` a `038` foram executadas e validadas, abrangendo:
+A fundação foi instalada até a migration `013`. As evoluções de `014` a `042` foram executadas e validadas, abrangendo:
 
 - contato público;
 - dashboard da membro;
@@ -36,9 +36,11 @@ A fundação foi instalada até a migration `013`. As evoluções de `014` a `03
 - comunidade e moderação;
 - conteúdo editorial;
 - eventos e inscrições;
-- atendimento e privacidade.
+- atendimento e privacidade;
+- clube e assinaturas em homologação;
+- bloqueio explícito de execução anônima nas funções do clube.
 
-As migrations `039_club_subscriptions_homologation.sql` e `040_verify_club_subscriptions_homologation.sql` foram preparadas no repositório. Elas devem ser executadas, nessa ordem, no Supabase antes da homologação operacional do módulo.
+Os verificadores `040_verify_club_subscriptions_homologation.sql` e `042_verify_club_function_privileges.sql` retornaram todos os campos como `true` em 2 de julho de 2026.
 
 ## Módulos implementados
 
@@ -64,7 +66,8 @@ A etapa de homologação acrescenta:
 - concessão de acesso geral ao clube e a recursos específicos;
 - expiração, pausa, cancelamento e revogação testáveis;
 - visualização informativa de planos na área da membro;
-- auditoria das operações críticas.
+- auditoria das operações críticas;
+- verificação explícita dos privilégios de `authenticated` e `anon`.
 
 Não foram ativados checkout, pagamentos, webhooks, renovação automática, reembolso ou conciliação financeira.
 
@@ -91,15 +94,17 @@ O conteúdo da página inicial passou a destacar formação, comunidade e atendi
 
 ## Próxima etapa recomendada
 
-Após executar e validar `039` e `040`, realizar homologação ponta a ponta com uma conta secundária:
+Realizar homologação ponta a ponta com uma conta secundária:
 
 - cadastrar plano e benefícios;
-- associar assinatura manual;
-- verificar acessos concedidos;
-- testar conteúdo, curso, comunidade e evento vinculados ao plano;
-- pausar, expirar e cancelar;
-- confirmar revogação e auditoria;
-- validar smartphone e desktop.
+- vincular pelo menos um curso, conteúdo, espaço da comunidade ou evento;
+- associar assinatura manual com período futuro;
+- verificar o acesso geral ao clube e os recursos concedidos;
+- testar o acesso com a conta secundária;
+- pausar, reativar, expirar e cancelar;
+- confirmar revogação, nova concessão, eventos e auditoria;
+- executar `supabase/manual/verify_club_operational_homologation.sql`;
+- validar smartphone e desktop, sem erros críticos no console.
 
 A seleção de provedor de pagamento permanece posterior a essa homologação funcional.
 
