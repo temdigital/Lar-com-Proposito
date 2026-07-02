@@ -37,6 +37,10 @@ Execute sempre em ordem numérica:
 25. `038_verify_support_center.sql`
 26. `039_club_subscriptions_homologation.sql`
 27. `040_verify_club_subscriptions_homologation.sql`
+28. `041_lock_club_function_privileges.sql`
+29. `042_verify_club_function_privileges.sql`
+
+As migrations até `042` foram executadas e validadas no ambiente. Os arquivos `040` e `042` retornaram todos os campos como `true`.
 
 ## Pessoas e acessos
 
@@ -82,10 +86,17 @@ O arquivo `039_club_subscriptions_homologation.sql` implementa, sem ativar cobra
 - associação manual de assinaturas para testes;
 - concessão e revogação de `access_grants` por assinatura;
 - reconciliação de períodos expirados;
-- bloqueio de escrita direta nas tabelas críticas do módulo;
-- execução anônima revogada.
+- bloqueio de escrita direta nas tabelas críticas do módulo.
 
-O arquivo `040_verify_club_subscriptions_homologation.sql` deve retornar todos os campos como `true`. Consulte também `docs/modulo-clube-assinaturas.md`.
+O arquivo `040_verify_club_subscriptions_homologation.sql` validou a estrutura principal. O resultado inicial identificou que o papel `anon` ainda possuía privilégio efetivo de execução nas funções do módulo.
+
+O arquivo `041_lock_club_function_privileges.sql` corrige esse ponto ao:
+
+- revogar `EXECUTE` de `PUBLIC`, `anon` e `authenticated` nas cinco funções;
+- devolver `EXECUTE` somente a `authenticated` nas quatro funções administrativas;
+- manter `sync_subscription_access(uuid)` inacessível diretamente pelo frontend.
+
+O arquivo `042_verify_club_function_privileges.sql` confirmou todos os dez controles como `true`.
 
 Esta etapa não implementa checkout, provedor de pagamento, renovação automática, reembolso, chargeback ou webhook financeiro.
 
@@ -121,4 +132,5 @@ Após concluir as migrations:
 9. associar uma assinatura manual a uma conta secundária;
 10. confirmar a criação do acesso geral ao clube e dos recursos associados;
 11. pausar ou expirar a assinatura e confirmar a revogação dos acessos;
-12. revisar periodicamente logs, RLS e dependências.
+12. revisar `subscription_events`, `audit_logs` e os resultados de `supabase/manual/verify_club_operational_homologation.sql`;
+13. validar o fluxo em smartphone e desktop, sem erros críticos no console.
